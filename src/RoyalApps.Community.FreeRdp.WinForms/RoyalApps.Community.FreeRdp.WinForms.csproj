@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Product>RoyalApps.Community.FreeRdp.WinForms</Product>
+		<Description>A control which uses wfreerdp.exe</Description>
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>NU1701</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<UseWindowsForms>true</UseWindowsForms>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>pdbonly</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\Files\*.*" />
+	</ItemGroup>
+
+</Project>
