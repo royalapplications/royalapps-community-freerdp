@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 
 using RoyalApps.Community.FreeRdp.WinForms.Configuration;
@@ -19,50 +17,33 @@ namespace RoyalApps.Community.FreeRdp.WinForms
     public class FreeRdpControl : UserControl
     {
         private const string WFREERDP_EXE = "wfreerdp.exe";
+        private Process? _process;
 
         /// <summary>
-        /// 
+        /// FreeRDP configuration settings 
         /// </summary>
         [Category("FreeRDP Settings"), Description("FreeRDP configuration settings.")]
         public FreeRdpConfiguration Configuration { get; set; } = new();
-        
+
         /// <summary>
-        /// Starts the FreeRDP session using the wfreerdp.exe.
+        /// Raised when wfreerdp.exe has been started.
+        /// </summary>
+        public event EventHandler? Connected;
+
+        /// <summary>
+        /// Raised when wfreerdp.exe has exited.
+        /// </summary>
+        public event EventHandler<DisconnectEventArgs>? Disconnected; 
+
+        /// <summary>
+        /// Starts the FreeRDP session using the wfreerdp.exe
         /// </summary>
         public void Connect()
         {
+            if (_process is {HasExited: false})
+                return;
+            
             var arguments = Configuration.GetArguments();
-
-            if (string.IsNullOrEmpty(Configuration.UserName) || string.IsNullOrEmpty(Configuration.Password))
-            {
-                var credui_info = new CREDUI_INFO
-                {
-                    hwndParent = Handle,
-                    pszCaptionText = $"Authentication Required",
-                    pszMessageText = $"Please provide credentials for host: {Configuration.Server}",
-                    hbmBanner = IntPtr.Zero,
-                };
-                credui_info.cbSize = Marshal.SizeOf(credui_info);
-                var usernameBuilder = new StringBuilder();
-                var passwordBuilder = new StringBuilder();
-                var safePassword = false;
-                var results = CredentialExtensions.CredUIPromptForCredentialsW(
-                    ref credui_info, 
-                    Configuration.Server,
-                    IntPtr.Zero,
-                    0,
-                    usernameBuilder,
-                    105,
-                    passwordBuilder,
-                    256,
-                    ref safePassword,
-                    CREDUI_FLAGS.CREDUIWIN_GENERIC | 
-                    CREDUI_FLAGS.CREDUIWIN_ENUMERATE_CURRENT_USER);
-                if (results != CredUIReturnCodes.NO_ERROR)
-                    throw new InvalidOperationException($"The credential prompt failed: {results}");
-                Configuration.UserName = usernameBuilder.ToString();
-                Configuration.Password = passwordBuilder.ToString();
-            }
 
             Configuration.ParentWindow = Handle.ToInt64();
             if (Configuration.DesktopWidth == 0 || Configuration.DesktopHeight == 0)
@@ -77,11 +58,32 @@ namespace RoyalApps.Community.FreeRdp.WinForms
                     WFREERDP_EXE,
                     GetType().Assembly.GetResourceFileAsBytes(WFREERDP_EXE));
 
-            var process = new Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.FileName = WFREERDP_EXE;
-            process.StartInfo.Arguments = string.Join(" ", arguments);
-            process.Start();
+            _process = new Process
+            {
+                EnableRaisingEvents = true,
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    FileName = freeRdpPath,
+                    Arguments = string.Join(" ", arguments)
+                }
+            };
+            _process.Exited += Process_Exited;
+            _process.Start();
+            Connected?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Process_Exited(object? sender, EventArgs e)
+        {
+            if (_process is null)
+                return;
+            
+            var exitCode = _process.ExitCode;
+            _process.Exited -= Process_Exited;
+            _process.Dispose();
+            _process = null;
+
+            Invoke(Disconnected, this, new DisconnectEventArgs(exitCode));
         }
     }
 }

@@ -17,4 +17,8 @@
     <ProjectReference Include="..\RoyalApps.Community.FreeRdp.WinForms\RoyalApps.Community.FreeRdp.WinForms.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Ookii.Dialogs.WinForms" Version="4.0.0" />
+  </ItemGroup>
+
 </Project>
