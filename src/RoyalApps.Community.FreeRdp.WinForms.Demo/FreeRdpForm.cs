@@ -20,7 +20,7 @@ public partial class FreeRdpForm : Form
     {
         if (string.IsNullOrWhiteSpace(FreeRdpControl.Configuration.Server))
         {
-            var inputDialog = new InputDialog
+            using var inputDialog = new InputDialog
             {
                 WindowTitle = @"Server Required",
                 MainInstruction = @"Please enter a server name or IP address",
@@ -29,19 +29,15 @@ public partial class FreeRdpForm : Form
             
             if (inputDialog.ShowDialog(this) == DialogResult.Cancel ||
                 string.IsNullOrWhiteSpace(inputDialog.Input))
-            {
-                inputDialog.Dispose();
                 return;
-            }
 
             FreeRdpControl.Configuration.Server = inputDialog.Input;
-            inputDialog.Dispose();
         }
 
         if (string.IsNullOrEmpty(FreeRdpControl.Configuration.UserName) || 
             string.IsNullOrEmpty(FreeRdpControl.Configuration.Password))
         {
-            var credentialDialog = new CredentialDialog
+            using var credentialDialog = new CredentialDialog
             {
                 Target = FreeRdpControl.Configuration.Server,
                 WindowTitle = @"Credentials Required",
@@ -51,10 +47,7 @@ public partial class FreeRdpForm : Form
             };
             if (credentialDialog.ShowDialog(this) == DialogResult.Cancel ||
                 credentialDialog.Credentials == null)
-            {
-                credentialDialog.Dispose();
                 return;
-            }
             
             FreeRdpControl.Configuration.UserName = credentialDialog.Credentials.UserName;
             FreeRdpControl.Configuration.Domain = credentialDialog.Credentials.Domain;
