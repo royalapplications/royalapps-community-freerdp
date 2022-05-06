@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Ookii.Dialogs.WinForms;
 
@@ -6,11 +7,36 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Demo;
 
 public partial class FreeRdpForm : Form
 {
+
+    private readonly Form _form;
+    private readonly PropertyGrid _propertyGrid;
+    
     public FreeRdpForm()
     {
         InitializeComponent();
+        
+        _form = new Form
+        {
+            Size = new Size(800, 1000),
+            Text = @"Settings",
+            FormBorderStyle = FormBorderStyle.SizableToolWindow,
+            StartPosition = FormStartPosition.CenterParent
+        };
+
+        _propertyGrid = new PropertyGrid
+        {
+            Dock = DockStyle.Fill
+        };
     }
 
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+
+        _form.Size = new Size(800, 1000);
+        _propertyGrid.Parent = _form;
+    }
+    
     private void ExitMenuItem_Click(object sender, EventArgs e)
     {
         Close();
@@ -64,19 +90,22 @@ public partial class FreeRdpForm : Form
 
     private void SettingsMenuItem_Click(object sender, EventArgs e)
     {
-
+        _propertyGrid.SelectedObject = FreeRdpControl.Configuration;
+        _form.Show(this);
     }
 
     private void FreeRdpControl_Connected(object sender, EventArgs e)
     {
         ConnectMenuItem.Enabled = false;
         DisconnectMenuItem.Enabled = true;
+        _propertyGrid.SelectedObject = FreeRdpControl.Configuration;
     }
 
     private void FreeRdpControl_Disconnected(object sender, DisconnectEventArgs e)
     {
         ConnectMenuItem.Enabled = true;
         DisconnectMenuItem.Enabled = false;
+        _propertyGrid.SelectedObject = FreeRdpControl.Configuration;
         if (e.UserInitiated)
             return;
         MessageBox.Show(this, e.ErrorMessage, @"RDP Session Terminated");
