@@ -23,7 +23,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
         private const string WFREERDP_EXE = "wfreerdp.exe";
 
         private readonly Timer _timerResizeInProgress;
-        private readonly Panel _renderTarget;
+        private readonly UserControl _renderTarget;
         private Size _previousClientSize = Size.Empty;
         private Process? _process;
 
@@ -48,7 +48,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
         /// </summary>
         public FreeRdpControl()
         {
-            _renderTarget = new Panel
+            _renderTarget = new UserControl
             {
                 Anchor = AnchorStyles.None,
                 Dock = DockStyle.None,
