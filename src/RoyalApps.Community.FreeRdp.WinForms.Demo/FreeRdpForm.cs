@@ -24,7 +24,8 @@ public partial class FreeRdpForm : Form
             {
                 WindowTitle = @"Server Required",
                 MainInstruction = @"Please enter a server name or IP address",
-                Content = @"Note: The FreeRdpControl will throw an exception if the Server property is not specified."
+                Content = @"Note: The FreeRdpControl will throw an exception if the Server property is not specified.",
+                Input = FreeRdpControl.Configuration.Server
             };
             
             if (inputDialog.ShowDialog(this) == DialogResult.Cancel ||
@@ -58,7 +59,7 @@ public partial class FreeRdpForm : Form
 
     private void DisconnectMenuItem_Click(object sender, EventArgs e)
     {
-
+        FreeRdpControl.Disconnect();
     }
 
     private void SettingsMenuItem_Click(object sender, EventArgs e)
@@ -74,8 +75,10 @@ public partial class FreeRdpForm : Form
 
     private void FreeRdpControl_Disconnected(object sender, DisconnectEventArgs e)
     {
-        ConnectMenuItem.Enabled = false;
-        DisconnectMenuItem.Enabled = true;
-        MessageBox.Show(this, @$"Exit Code: {e.ExitCode}", @"Process wfreerdp.exe was stopped");
+        ConnectMenuItem.Enabled = true;
+        DisconnectMenuItem.Enabled = false;
+        if (e.UserInitiated)
+            return;
+        MessageBox.Show(this, e.ErrorMessage, @"RDP Session Terminated");
     }
 }
