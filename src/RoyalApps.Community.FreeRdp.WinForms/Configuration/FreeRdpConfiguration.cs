@@ -274,6 +274,11 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Configuration
         public long ParentWindow { get; set; }
 
         /// <summary>
+        /// SmartReconnect: When enabled, the connection will be re-established to adapt to the new desktop size
+        /// </summary>
+        public bool SmartReconnect { get; set; }
+        
+        /// <summary>
         /// TempPath: The directory where wfreerdp.exe is written to if not already available
         /// </summary>
         public string TempPath { get; set; } = "%temp%";

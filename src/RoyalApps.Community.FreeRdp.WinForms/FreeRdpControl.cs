@@ -21,7 +21,10 @@ namespace RoyalApps.Community.FreeRdp.WinForms
     public class FreeRdpControl : UserControl
     {
         private const string WFREERDP_EXE = "wfreerdp.exe";
+
+        private readonly Timer _timerResizeInProgress;
         private readonly Panel _renderTarget;
+        private Size _previousClientSize = Size.Empty;
         private Process? _process;
 
         /// <summary>
@@ -50,6 +53,25 @@ namespace RoyalApps.Community.FreeRdp.WinForms
                 Anchor = AnchorStyles.None,
                 Dock = DockStyle.None,
             };
+            
+            _timerResizeInProgress = new Timer
+            {
+                Interval = 1000
+            };
+            _timerResizeInProgress.Tick += TimerResizeInProgress_Tick;
+        }
+
+        /// <summary>
+        /// Clean up resources
+        /// </summary>
+        /// <param name="disposing">disposing</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _timerResizeInProgress.Tick -= TimerResizeInProgress_Tick;
+            }
+            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -63,6 +85,18 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             AutoScroll = true;
 
             _renderTarget.Parent = this;
+        }
+
+        /// <summary>
+        /// OnSizeChanged override
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            if (!Configuration.SmartReconnect)
+                return;
+            _timerResizeInProgress.Start();
         }
 
         /// <summary>
@@ -91,7 +125,9 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             _renderTarget.Location = new Point(
                 ClientSize.Width / 2 - _renderTarget.Width / 2, 
                 ClientSize.Height / 2 - _renderTarget.Height / 2);
-            
+
+            _previousClientSize = ClientSize;
+
             // AutoScrollMinSize is required to get scrollbars to appear
             AutoScrollMinSize = _renderTarget.Size;
             
@@ -121,12 +157,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
         /// </summary>
         public void Disconnect()
         {
-            if (_process is null || _process.HasExited)
-                return;
-            
-            _process.Kill(true);
-            _process = null;
-            
+            KillProcess();            
             Invoke(Disconnected, this, new DisconnectEventArgs(0) { UserInitiated = true });
         }
         
@@ -142,5 +173,37 @@ namespace RoyalApps.Community.FreeRdp.WinForms
 
             Invoke(Disconnected, this, new DisconnectEventArgs((uint)exitCode));
         }
+        
+        private void TimerResizeInProgress_Tick(object? sender, EventArgs e)
+        {
+            if (MouseButtons == MouseButtons.Left)
+                return;
+            _timerResizeInProgress.Stop();
+            
+            // make sure that Size 0,0 (when minimized) is also ignored
+            if (Size.Width == 0 ||
+                Size.Height == 0 ||
+                _previousClientSize.IsEmpty ||
+                _previousClientSize.Equals(Size))
+                return;
+
+            KillProcess();
+            
+            Configuration.DesktopWidth = 0;
+            Configuration.DesktopHeight = 0;
+            
+            Connect();
+        }
+
+        private void KillProcess()
+        {
+            if (_process is null || _process.HasExited)
+                return;
+            
+            _process.Exited -= Process_Exited;
+            _process.Kill(true);
+            _process = null;
+        }
+        
    }
 }
