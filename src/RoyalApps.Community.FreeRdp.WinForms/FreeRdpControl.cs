@@ -9,6 +9,9 @@ using System.Windows.Forms;
 using RoyalApps.Community.FreeRdp.WinForms.Configuration;
 using RoyalApps.Community.FreeRdp.WinForms.Extensions;
 
+// ReSharper disable CommentTypo
+// ReSharper disable IdentifierTypo
+
 namespace RoyalApps.Community.FreeRdp.WinForms
 {
     /// <summary>
@@ -42,12 +45,10 @@ namespace RoyalApps.Community.FreeRdp.WinForms
         /// </summary>
         public FreeRdpControl()
         {
-            BorderStyle = BorderStyle.FixedSingle;
             _renderTarget = new Panel
             {
                 Anchor = AnchorStyles.None,
                 Dock = DockStyle.None,
-                BorderStyle = BorderStyle.FixedSingle
             };
         }
 
@@ -81,17 +82,18 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             }
 
             // calculate the size of the render target based on the remote desktop size
+            _renderTarget.MinimumSize = Size.Empty;
+            _renderTarget.MaximumSize = Size.Empty;
             _renderTarget.Size = new Size(Configuration.DesktopWidth, Configuration.DesktopHeight);
             _renderTarget.MinimumSize = _renderTarget.Size;
             _renderTarget.MaximumSize = _renderTarget.Size;
             // calculate position, since anchor and dock is none, it will be kept in center
             _renderTarget.Location = new Point(
-                ClientSize.Width / 2 - _renderTarget.Width / 2,
+                ClientSize.Width / 2 - _renderTarget.Width / 2, 
                 ClientSize.Height / 2 - _renderTarget.Height / 2);
             
             // AutoScrollMinSize is required to get scrollbars to appear
             AutoScrollMinSize = _renderTarget.Size;
-
             
             var freeRdpPath = Environment.ExpandEnvironmentVariables(Path.Combine(Configuration.TempPath, WFREERDP_EXE));
             if (!File.Exists(freeRdpPath))
@@ -123,7 +125,6 @@ namespace RoyalApps.Community.FreeRdp.WinForms
                 return;
             
             _process.Kill(true);
-            _process.Dispose();
             _process = null;
             
             Invoke(Disconnected, this, new DisconnectEventArgs(0) { UserInitiated = true });
@@ -141,5 +142,5 @@ namespace RoyalApps.Community.FreeRdp.WinForms
 
             Invoke(Disconnected, this, new DisconnectEventArgs((uint)exitCode));
         }
-    }
+   }
 }
