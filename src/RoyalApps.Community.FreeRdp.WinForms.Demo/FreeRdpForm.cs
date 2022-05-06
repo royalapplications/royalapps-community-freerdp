@@ -22,6 +22,11 @@ public partial class FreeRdpForm : Form
             FormBorderStyle = FormBorderStyle.SizableToolWindow,
             StartPosition = FormStartPosition.CenterParent
         };
+        _form.Closing += (sender, args) =>
+        {
+            _form.Hide();
+            args.Cancel = true;
+        };
 
         _propertyGrid = new PropertyGrid
         {
