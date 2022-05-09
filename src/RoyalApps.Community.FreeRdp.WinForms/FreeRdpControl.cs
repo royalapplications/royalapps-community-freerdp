@@ -201,7 +201,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
                 return;
             
             _process.Exited -= Process_Exited;
-            _process.Kill(true);
+            _process.Kill();
             _process = null;
         }
         

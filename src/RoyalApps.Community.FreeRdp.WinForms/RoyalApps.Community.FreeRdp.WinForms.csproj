@@ -4,14 +4,15 @@
 		<Product>RoyalApps.Community.FreeRdp.WinForms</Product>
 		<Description>A control which uses wfreerdp.exe</Description>
 		<Nullable>enable</Nullable>
+		<LangVersion>10</LangVersion>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>NU1701</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<TargetFrameworks>net45;net5.0-windows;net6.0-windows</TargetFrameworks>
+		<RuntimeIdentifier>win</RuntimeIdentifier>
 		<UseWindowsForms>true</UseWindowsForms>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -24,6 +25,10 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\Files\*.*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 	</ItemGroup>
 
 </Project>
