@@ -63,7 +63,6 @@ jobs:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
       DOTNET_CLI_TELEMETRY_OPTOUT: true
       DOTNET_NOLOGO: true
-      NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
       
     steps:
     - name: Checkout
@@ -95,6 +94,6 @@ jobs:
 
     # Push nuget package to nuget.org
     - name: nuget push
-      run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json --skip-duplicate -n 1
+      run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY1 }} --skip-duplicate -n 1
       env:
         Configuration: ${{ matrix.configuration }}
