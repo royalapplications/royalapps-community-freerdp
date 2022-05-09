@@ -14,11 +14,11 @@ The FreeRDP control starts the executable `wfreerdp.exe` and passes on the corre
 ### Installation
 You should install the RoyalApps.Community.FreeRDP with NuGet:
 ```
-Install-Package RoyalApps.Community.FreeRDP
+Install-Package RoyalApps.Community.FreeRDP.WinForms
 ```
 or via the command line interface:
 ```
-dotnet add package RoyalApps.Community.FreeRDP
+dotnet add package RoyalApps.Community.FreeRDP.WinForms
 ```
 
 ### Using the FreeRdpControl
