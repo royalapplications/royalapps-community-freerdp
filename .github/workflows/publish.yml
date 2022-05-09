@@ -60,7 +60,11 @@ jobs:
       # Test_Project_Path: your-test-project-path                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
       # Wap_Project_Directory: your-wap-project-directory-name    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
       # Wap_Project_Path: your-wap-project-path                   # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
-
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      DOTNET_NOLOGO: true
+      NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -77,49 +81,20 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
-    # Execute all unit tests in the solution
-    # - name: Execute unit tests
-      # run: dotnet test
+    # Build
+    - name: build project
+      run: dotnet build -c Release src/RoyalApps.Community.FreeRdp.WinForms/RoyalApps.Community.FreeRdp.WinForms.csproj
+      env:
+        Configuration: ${{ matrix.configuration }}
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    # - name: Restore the application
-      # run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      # env:
-        # Configuration: ${{ matrix.configuration }}
+    # Pack nuget package
+    - name: dotnet pack
+      run: dotnet pack --no-build -c Release src/RoyalApps.Community.FreeRdp.WinForms/RoyalApps.Community.FreeRdp.WinForms.csproj -o .
+      env:
+        Configuration: ${{ matrix.configuration }}
 
-    # Decode the base 64 encoded pfx and save the Signing_Certificate
-    # - name: Decode the pfx
-      # run: |
-        # $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
-        # $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
-        # [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
-
-    # Remove the pfx
-    # - name: Remove the pfx
-      # run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx
-
-    - name: Publish NuGet
-      # You may pin to the exact commit or the version.
-      # uses: brandedoutcast/publish-nuget@c12b8546b67672ee38ac87bea491ac94a587f7cc
-      uses: brandedoutcast/publish-nuget@v2.5.5
-      with:
-        # Filepath of the project to be packaged, relative to root of repository
-        PROJECT_FILE_PATH: "src/RoyalApps.Community.FreeRdp.WinForms/RoyalApps.Community.FreeRdp.WinForms.csproj"
-        # NuGet package id, used for version detection & defaults to project name
-        # PACKAGE_NAME: # optional
-        # Filepath with version info, relative to root of repository & defaults to PROJECT_FILE_PATH
-        # VERSION_FILE_PATH: # optional
-        # Regex pattern to extract version info in a capturing group
-        # VERSION_REGEX: # optional, default is ^\s*<Version>(.*)<\/Version>\s*$
-        # Useful with external providers like Nerdbank.GitVersioning, ignores VERSION_FILE_PATH & VERSION_REGEX
-        # VERSION_STATIC: # optional
-        # Flag to toggle git tagging, enabled by default
-        # TAG_COMMIT: # optional, default is true
-        # Format of the git tag, [*] gets replaced with actual version
-        # TAG_FORMAT: # optional, default is v*
-        # API key to authenticate with NuGet server
-        NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
-        # NuGet server uri hosting the packages, defaults to https://api.nuget.org
-        # NUGET_SOURCE: # optional, default is https://api.nuget.org
-        # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
-        # INCLUDE_SYMBOLS: true
+    # Push nuget package to nuget.org
+    - name: nuget push
+      run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json --skip-duplicate -n 1
+      env:
+        Configuration: ${{ matrix.configuration }}
