@@ -8,6 +8,7 @@
 		<PackageProjectUrl>https://github.com/royalapplications/royalapps-community-freerdp</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/royalapplications/royalapps-community-freerdp</RepositoryUrl>
 		<PackageIconUrl>https://github.com/royalapplications/royalapps-community-freerdp/blob/main/docs/assets/RoyalApps_1024.png</PackageIconUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>RoyalApps_1024.png</PackageIcon>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Version>0.1.0</Version>
@@ -23,7 +24,6 @@
 		<RuntimeIdentifier>win</RuntimeIdentifier>
 		<UseWindowsForms>true</UseWindowsForms>
 		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -33,6 +33,7 @@
 
 	<ItemGroup>
 		<None Include="Resources\Images\RoyalApps_1024.png" Pack="true" PackagePath="\"/>
+		<None Include="..\..\README.md" Pack="true" PackagePath="\"/>
 		<EmbeddedResource Include="Resources\Files\*.*" />
 	</ItemGroup>
 
