@@ -35,7 +35,7 @@ FreeRdpControl.Connect();
 ```
 to start a connection.
 
-[!Note]
+**Note:**  
 Before you call `Connect();`, make sure you have set the `Server` (hostname or IP address) and the credential properties (`Username` and `Password`). An exception will be thrown if these properties are not set.
 
 To disconnect, simply call:
