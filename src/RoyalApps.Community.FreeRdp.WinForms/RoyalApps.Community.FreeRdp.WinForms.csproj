@@ -10,7 +10,7 @@
 		<PackageIconUrl>https://github.com/royalapplications/royalapps-community-freerdp/blob/main/docs/assets/RoyalApps_1024.png</PackageIconUrl>
 		<PackageIcon>RoyalApps_1024.png</PackageIcon>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>0.0.1</Version>
+		<Version>0.1.0</Version>
 		<Nullable>enable</Nullable>
 		<LangVersion>10</LangVersion>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
