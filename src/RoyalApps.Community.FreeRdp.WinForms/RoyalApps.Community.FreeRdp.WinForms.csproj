@@ -2,7 +2,15 @@
 
 	<PropertyGroup>
 		<Product>RoyalApps.Community.FreeRdp.WinForms</Product>
-		<Description>A control which uses wfreerdp.exe</Description>
+		<Description>An embeddable WinForms control which uses wfreerdp.exe</Description>
+		<Company>Royal Apps GmbH</Company>
+		<Copyright>Copyright © $([System.DateTime]::Now.ToString(yyyy)), Royal Apps GmbH, Austria</Copyright>
+		<PackageProjectUrl>https://github.com/royalapplications/royalapps-community-freerdp</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/royalapplications/royalapps-community-freerdp</RepositoryUrl>
+		<PackageIconUrl>https://github.com/royalapplications/royalapps-community-freerdp/blob/main/docs/assets/RoyalApps_1024.png</PackageIconUrl>
+		<PackageIcon>RoyalApps_1024.png</PackageIcon>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Version>0.0.1</Version>
 		<Nullable>enable</Nullable>
 		<LangVersion>10</LangVersion>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -24,6 +32,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="Resources\Images\RoyalApps_1024.png" Pack="true" PackagePath="\"/>
 		<EmbeddedResource Include="Resources\Files\*.*" />
 	</ItemGroup>
 
