@@ -134,7 +134,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             var freeRdpPath = Environment.ExpandEnvironmentVariables(Path.Combine(Configuration.TempPath, WFREERDP_EXE));
             if (!File.Exists(freeRdpPath))
                 File.WriteAllBytes(
-                    WFREERDP_EXE,
+                    freeRdpPath,
                     GetType().Assembly.GetResourceFileAsBytes(WFREERDP_EXE));
 
             _process = new Process
