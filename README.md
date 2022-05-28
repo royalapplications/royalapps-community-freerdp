@@ -30,7 +30,7 @@ To configure all RDP relevant settings, use the properties of the `FreeRdpConfig
 
 #### Connect and Disconnect
 Once the configuration is set, call:
-```
+```csharp
 FreeRdpControl.Connect();
 ```
 to start a connection.
@@ -39,7 +39,7 @@ to start a connection.
 > Before you call `Connect();`, make sure you have set the `Server` (hostname or IP address) and the credential properties (`Username` and `Password`). An exception will be thrown if these properties are not set. If you connect to a Windows machine using the IP address, the connection may fail because the subject name of the certificate doesn't match. In this case, set `IgnoreCertificates` to `true`.
 
 To disconnect, simply call:
-```
+```csharp
 FreeRdpControl.Disconnect();
 ```
 #### Subscribe to Events
