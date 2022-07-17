@@ -3,6 +3,7 @@
   <PropertyGroup>
     <Product>RoyalApps.Community.FreeRdp.WinForms.Demo</Product>
     <Description>Demo app to test the FreeRDP control.</Description>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>

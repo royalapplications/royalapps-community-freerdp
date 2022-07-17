@@ -95,6 +95,7 @@
             this.FreeRdpControl.Connected += FreeRdpControl_Connected;
             this.FreeRdpControl.Disconnected += FreeRdpControl_Disconnected;
             this.FreeRdpControl.CertificateError += FreeRdpControl_CertificateError;
+            this.FreeRdpControl.VerifyCredentials += FreeRdpControl_VerifyCredentials; 
             //
             // MenuStrip
             // 

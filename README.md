@@ -75,6 +75,8 @@ The `DisconnectedEventArgs` may have an error code or error message for more inf
 
 The `CertificateError` event is raised when the TLS handshake failed. Calling `e.Continue();` in the event handler will set the `FreeRdpConfiguration.IgnoreCertificate` property to true and retries the connection.
 
+The `VerifyCredentials` event is raised when an authentication error occurs and the login fails. Calling `e.SetCredentials(string? username, string? domain, string? password);` in the event handler will set the credential properties in the `FreeRdpConfiguration` class and retries the connection with the provided credentials.
+
 ## Exploring the Demo Application
 The demo application is quite simple. The `Connection` menu has the following items:
 ### Connect

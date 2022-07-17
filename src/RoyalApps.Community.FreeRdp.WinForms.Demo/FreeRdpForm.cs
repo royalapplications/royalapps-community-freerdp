@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Net;
 using System.Windows.Forms;
 using Ookii.Dialogs.WinForms;
 
@@ -69,23 +70,12 @@ public partial class FreeRdpForm : Form
         if (string.IsNullOrEmpty(FreeRdpControl.Configuration.UserName) || 
             string.IsNullOrEmpty(FreeRdpControl.Configuration.Password))
         {
-            using var credentialDialog = new CredentialDialog
-            {
-                Target = FreeRdpControl.Configuration.Server,
-                WindowTitle = @"Credentials Required",
-                MainInstruction = @"Please enter a username and password",
-                Content = @"Note: The FreeRdpControl will throws an exception if no credentials are provided.",
-                ShowSaveCheckBox = false,
-            };
-            if (credentialDialog.ShowDialog(this) == DialogResult.Cancel ||
-                credentialDialog.Credentials == null)
-                return;
-            
-            FreeRdpControl.Configuration.UserName = credentialDialog.Credentials.UserName;
-            FreeRdpControl.Configuration.Domain = string.IsNullOrWhiteSpace(credentialDialog.Credentials.Domain) 
+            var credentials = GetCredentialFromDialog(@"Please enter a username and password");
+            FreeRdpControl.Configuration.UserName = credentials?.UserName;
+            FreeRdpControl.Configuration.Domain = string.IsNullOrWhiteSpace(credentials?.Domain) 
                 ? null 
-                : credentialDialog.Credentials.Domain;
-            FreeRdpControl.Configuration.Password = credentialDialog.Password;
+                : credentials.Domain;
+            FreeRdpControl.Configuration.Password = credentials?.Password;
         }
         FreeRdpControl.Connect();
     }
@@ -93,6 +83,21 @@ public partial class FreeRdpForm : Form
     private void DisconnectMenuItem_Click(object sender, EventArgs e)
     {
         FreeRdpControl.Disconnect();
+    }
+
+    private void ZoomInMenuItem_Click(object sender, EventArgs e)
+    {
+        FreeRdpControl.ZoomIn();
+    }
+
+    private void ZoomOutMenuItem_Click(object sender, EventArgs e)
+    {
+        FreeRdpControl.ZoomOut();
+    }
+
+    private void ResetZoomMenuItem_Click(object sender, EventArgs e)
+    {
+        FreeRdpControl.ResetZoom();
     }
 
     private void SettingsMenuItem_Click(object sender, EventArgs e)
@@ -128,18 +133,25 @@ public partial class FreeRdpForm : Form
             e.Continue();
     }
 
-    private void ZoomInMenuItem_Click(object sender, EventArgs e)
+    private void FreeRdpControl_VerifyCredentials(object? sender, VerifyCredentialsEventArgs e)
     {
-        FreeRdpControl.ZoomIn();
+        var credentials = GetCredentialFromDialog(@"An authentication error occurred. Login failed. Please verify your credentials.");
+        if (credentials == null)
+            return;
+        e.SetCredentials(credentials.UserName, credentials.Domain, credentials.Password);
     }
 
-    private void ZoomOutMenuItem_Click(object sender, EventArgs e)
+    private NetworkCredential? GetCredentialFromDialog(string mainInstruction)
     {
-        FreeRdpControl.ZoomOut();
-    }
-
-    private void ResetZoomMenuItem_Click(object sender, EventArgs e)
-    {
-        FreeRdpControl.ResetZoom();
+        using var credentialDialog = new CredentialDialog
+        {
+            Target = FreeRdpControl.Configuration.Server,
+            WindowTitle = @"Credentials Required",
+            MainInstruction = mainInstruction,
+            Content = @"Note: The FreeRdpControl will throws an exception if no credentials are provided.",
+            ShowSaveCheckBox = false,
+        };
+        credentialDialog.ShowDialog(this);
+        return credentialDialog.Credentials;
     }
 }
