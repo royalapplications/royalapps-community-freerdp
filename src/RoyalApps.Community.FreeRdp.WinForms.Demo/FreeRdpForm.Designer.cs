@@ -38,6 +38,10 @@
             this.DisconnectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.SettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Separator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.ResetZoomMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ZoomInMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ZoomOutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,6 +50,7 @@
             freeRdpConfiguration1.Aero = false;
             freeRdpConfiguration1.AudioCaptureRedirectionMode = false;
             freeRdpConfiguration1.AudioRedirectionMode = RoyalApps.Community.FreeRdp.WinForms.Configuration.AudioRedirectionMode.NotSpecified;
+            freeRdpConfiguration1.AutoScaling = true;
             freeRdpConfiguration1.BitmapCaching = true;
             freeRdpConfiguration1.ColorDepth = RoyalApps.Community.FreeRdp.WinForms.Configuration.BitsPerPixel.NotSpecified;
             freeRdpConfiguration1.Compression = false;
@@ -98,7 +103,7 @@
             this.ConnectionMenuItem});
             this.MenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip.Name = "MenuStrip";
-            this.MenuStrip.Size = new System.Drawing.Size(2514, 40);
+            this.MenuStrip.Size = new System.Drawing.Size(2514, 42);
             this.MenuStrip.TabIndex = 0;
             this.MenuStrip.Text = "menuStrip1";
             // 
@@ -107,13 +112,13 @@
             this.FileMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitMenuItem});
             this.FileMenuItem.Name = "FileMenuItem";
-            this.FileMenuItem.Size = new System.Drawing.Size(71, 36);
+            this.FileMenuItem.Size = new System.Drawing.Size(71, 38);
             this.FileMenuItem.Text = "&File";
             // 
             // ExitMenuItem
             // 
             this.ExitMenuItem.Name = "ExitMenuItem";
-            this.ExitMenuItem.Size = new System.Drawing.Size(184, 44);
+            this.ExitMenuItem.Size = new System.Drawing.Size(359, 44);
             this.ExitMenuItem.Text = "E&xit";
             this.ExitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
             // 
@@ -122,16 +127,20 @@
             this.ConnectionMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ConnectMenuItem,
             this.DisconnectMenuItem,
+            this.Separator2,
+            this.ZoomInMenuItem,
+            this.ZoomOutMenuItem,
+            this.ResetZoomMenuItem,
             this.Separator1,
             this.SettingsMenuItem});
             this.ConnectionMenuItem.Name = "ConnectionMenuItem";
-            this.ConnectionMenuItem.Size = new System.Drawing.Size(157, 36);
+            this.ConnectionMenuItem.Size = new System.Drawing.Size(157, 38);
             this.ConnectionMenuItem.Text = "&Connection";
             // 
             // ConnectMenuItem
             // 
             this.ConnectMenuItem.Name = "ConnectMenuItem";
-            this.ConnectMenuItem.Size = new System.Drawing.Size(265, 44);
+            this.ConnectMenuItem.Size = new System.Drawing.Size(359, 44);
             this.ConnectMenuItem.Text = "C&onnect";
             this.ConnectMenuItem.Click += new System.EventHandler(this.ConnectMenuItem_Click);
             // 
@@ -139,21 +148,47 @@
             // 
             this.DisconnectMenuItem.Enabled = false;
             this.DisconnectMenuItem.Name = "DisconnectMenuItem";
-            this.DisconnectMenuItem.Size = new System.Drawing.Size(265, 44);
+            this.DisconnectMenuItem.Size = new System.Drawing.Size(359, 44);
             this.DisconnectMenuItem.Text = "&Disconnect";
             this.DisconnectMenuItem.Click += new System.EventHandler(this.DisconnectMenuItem_Click);
             // 
             // Separator1
             // 
             this.Separator1.Name = "Separator1";
-            this.Separator1.Size = new System.Drawing.Size(262, 6);
+            this.Separator1.Size = new System.Drawing.Size(356, 6);
             // 
             // SettingsMenuItem
             // 
             this.SettingsMenuItem.Name = "SettingsMenuItem";
-            this.SettingsMenuItem.Size = new System.Drawing.Size(265, 44);
+            this.SettingsMenuItem.Size = new System.Drawing.Size(359, 44);
             this.SettingsMenuItem.Text = "&Settings...";
             this.SettingsMenuItem.Click += new System.EventHandler(this.SettingsMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.Separator2.Name = "Separator2";
+            this.Separator2.Size = new System.Drawing.Size(356, 6);
+            // 
+            // ResetZoomMenuItem
+            // 
+            this.ResetZoomMenuItem.Name = "ResetZoomMenuItem";
+            this.ResetZoomMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.ResetZoomMenuItem.Text = "&Reset Zoom";
+            this.ResetZoomMenuItem.Click += new System.EventHandler(this.ResetZoomMenuItem_Click);
+            // 
+            // ZoomInMenuItem
+            // 
+            this.ZoomInMenuItem.Name = "ZoomInMenuItem";
+            this.ZoomInMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.ZoomInMenuItem.Text = "Zoom &In";
+            this.ZoomInMenuItem.Click += new System.EventHandler(this.ZoomInMenuItem_Click);
+            // 
+            // ZoomOutMenuItem
+            // 
+            this.ZoomOutMenuItem.Name = "ZoomOutMenuItem";
+            this.ZoomOutMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.ZoomOutMenuItem.Text = "Zoom O&ut";
+            this.ZoomOutMenuItem.Click += new System.EventHandler(this.ZoomOutMenuItem_Click);
             // 
             // FreeRdpForm
             // 
@@ -183,5 +218,9 @@
         private System.Windows.Forms.ToolStripMenuItem DisconnectMenuItem;
         private System.Windows.Forms.ToolStripSeparator Separator1;
         private System.Windows.Forms.ToolStripMenuItem SettingsMenuItem;
+        private System.Windows.Forms.ToolStripSeparator Separator2;
+        private System.Windows.Forms.ToolStripMenuItem ZoomInMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ZoomOutMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ResetZoomMenuItem;
     }
 }

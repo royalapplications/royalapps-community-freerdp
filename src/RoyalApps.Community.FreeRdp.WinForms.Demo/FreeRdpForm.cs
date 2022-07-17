@@ -22,7 +22,7 @@ public partial class FreeRdpForm : Form
             FormBorderStyle = FormBorderStyle.SizableToolWindow,
             StartPosition = FormStartPosition.CenterParent
         };
-        _form.Closing += (sender, args) =>
+        _form.Closing += (_, args) =>
         {
             _form.Hide();
             args.Cancel = true;
@@ -82,7 +82,9 @@ public partial class FreeRdpForm : Form
                 return;
             
             FreeRdpControl.Configuration.UserName = credentialDialog.Credentials.UserName;
-            FreeRdpControl.Configuration.Domain = credentialDialog.Credentials.Domain;
+            FreeRdpControl.Configuration.Domain = string.IsNullOrWhiteSpace(credentialDialog.Credentials.Domain) 
+                ? null 
+                : credentialDialog.Credentials.Domain;
             FreeRdpControl.Configuration.Password = credentialDialog.Password;
         }
         FreeRdpControl.Connect();
@@ -114,5 +116,20 @@ public partial class FreeRdpForm : Form
         if (e.UserInitiated)
             return;
         MessageBox.Show(this, e.ErrorMessage, @"RDP Session Terminated");
+    }
+
+    private void ZoomInMenuItem_Click(object sender, EventArgs e)
+    {
+        FreeRdpControl.ZoomIn();
+    }
+
+    private void ZoomOutMenuItem_Click(object sender, EventArgs e)
+    {
+        FreeRdpControl.ZoomOut();
+    }
+
+    private void ResetZoomMenuItem_Click(object sender, EventArgs e)
+    {
+        FreeRdpControl.ResetZoom();
     }
 }
