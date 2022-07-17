@@ -7,15 +7,13 @@ namespace RoyalApps.Community.FreeRdp.WinForms;
 /// </summary>
 public class CertificateErrorEventArgs : EventArgs
 {
-    private bool _continue;
+    internal bool ShouldContinue { get; private set; }
 
-    internal bool ShouldContinue => _continue;
-    
     /// <summary>
     /// Ignores the error and continues. A new connection with /cert-ignore argument will be established.
     /// </summary>
     public void Continue()
     {
-        _continue = true;
+        ShouldContinue = true;
     }
 }

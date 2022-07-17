@@ -50,6 +50,11 @@ namespace RoyalApps.Community.FreeRdp.WinForms
         /// Raised when the TLS handshake fails because if an incorrect server certificate.
         /// </summary>
         public event EventHandler<CertificateErrorEventArgs>? CertificateError;
+
+        /// <summary>
+        /// Raised when login failed.
+        /// </summary>
+        public event EventHandler<VerifyCredentialsEventArgs>? VerifyCredentials;
         
         /// <summary>
         /// FreeRdpControl constructor
@@ -277,9 +282,22 @@ namespace RoyalApps.Community.FreeRdp.WinForms
                 }
             }
 
+            if (exitCode == 131092)
+            {
+                var args = new VerifyCredentialsEventArgs();
+                Invoke(VerifyCredentials, this, args);
+                if (args.CredentialsApplied)
+                {
+                    Configuration.UserName = args.Username;
+                    Configuration.Domain = args.Domain;
+                    Configuration.Password = args.Password;
+                    Invoke(Reconnect);
+                    return;
+                }
+            }
+            
             Configuration.DesktopWidth = _initialDesktopWidth;
             Configuration.DesktopHeight = _initialDesktopHeight;
-
             Invoke(Disconnected, this, new DisconnectEventArgs((uint) exitCode));
         }
 
@@ -335,6 +353,9 @@ namespace RoyalApps.Community.FreeRdp.WinForms
 
         private void KillProcess()
         {
+            Configuration.DesktopWidth = _initialDesktopWidth;
+            Configuration.DesktopHeight = _initialDesktopHeight;
+
             if (_process is null || _process.HasExited)
                 return;
 
@@ -346,10 +367,6 @@ namespace RoyalApps.Community.FreeRdp.WinForms
         private void Reconnect()
         {
             KillProcess();
-
-            Configuration.DesktopWidth = _initialDesktopWidth;
-            Configuration.DesktopHeight = _initialDesktopHeight;
-
             Connect();
         }
     }
