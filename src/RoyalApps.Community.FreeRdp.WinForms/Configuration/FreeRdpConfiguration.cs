@@ -75,10 +75,19 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Configuration
         public int DesktopHeight { get; set; }
 
         /// <summary>
-        /// DeviceScaleFactor (100, 140, 180): /scale:DeviceScaleFactor 
+        /// DeviceScaleFactor (100, 140, 180): /scale:DeviceScaleFactor
+        /// Recommended values:
+        /// 100: for DesktopScaleFactor of 100
+        /// 140: for DesktopScaleFactor between 100 and 199
+        /// 180: for DesktopScaleFactor of 200 or more
         /// </summary>
         [CommandLineArgument("/scale:{0}", 100)]
         public int DeviceScaleFactor { get; set; } = 100;
+
+        /// <summary>
+        /// AutoScaling: When enabled, the initial scale factor is determined based on DPI settings 
+        /// </summary>
+        public bool AutoScaling { get; set; }
 
         /// <summary>
         /// DesktopScaleFactor in percent (100-500): /scale-desktop:DesktopScaleFactor
