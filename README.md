@@ -73,6 +73,8 @@ The `Disconnected` event is raised when:
 
 The `DisconnectedEventArgs` may have an error code or error message for more information.
 
+The `CertificateError` event is raised when the TLS handshake failed. Calling `e.Continue();` in the event handler will set the `FreeRdpConfiguration.IgnoreCertificate` property to true and retries the connection.
+
 ## Exploring the Demo Application
 The demo application is quite simple. The `Connection` menu has the following items:
 ### Connect

@@ -65,7 +65,7 @@
             freeRdpConfiguration1.GatewayPassword = null;
             freeRdpConfiguration1.GatewayUserName = null;
             freeRdpConfiguration1.GdiRendering = RoyalApps.Community.FreeRdp.WinForms.Configuration.GdiRendering.NotSpecified;
-            freeRdpConfiguration1.IgnoreCertificate = true;
+            freeRdpConfiguration1.IgnoreCertificate = false;
             freeRdpConfiguration1.KeyboardLayout = null;
             freeRdpConfiguration1.MenuAnimations = false;
             freeRdpConfiguration1.NetworkConnectionType = RoyalApps.Community.FreeRdp.WinForms.Configuration.NetworkConnectionType.NotSpecified;
@@ -94,6 +94,7 @@
             this.FreeRdpControl.TabIndex = 0;
             this.FreeRdpControl.Connected += FreeRdpControl_Connected;
             this.FreeRdpControl.Disconnected += FreeRdpControl_Disconnected;
+            this.FreeRdpControl.CertificateError += FreeRdpControl_CertificateError;
             //
             // MenuStrip
             // 

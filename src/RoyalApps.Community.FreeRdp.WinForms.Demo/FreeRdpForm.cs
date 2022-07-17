@@ -115,7 +115,17 @@ public partial class FreeRdpForm : Form
         _propertyGrid.SelectedObject = FreeRdpControl.Configuration;
         if (e.UserInitiated)
             return;
-        MessageBox.Show(this, e.ErrorMessage, @"RDP Session Terminated");
+        MessageBox.Show(this, e.ErrorMessage, @"RDP Session Terminated", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+
+    private void FreeRdpControl_CertificateError(object sender, CertificateErrorEventArgs e)
+    {
+        if (MessageBox.Show(
+                this, 
+                @"The hostname of the server certificate does not match the provided host name. Do you want to ignore this error and try to connect again?", 
+                @"FreeRdp TLS handshake Error",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) 
+            e.Continue();
     }
 
     private void ZoomInMenuItem_Click(object sender, EventArgs e)
