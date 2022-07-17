@@ -74,7 +74,6 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             {
                 _timerResizeInProgress.Tick -= TimerResizeInProgress_Tick;
                 _timerResizeInProgress.Dispose();
-                
                 _process?.Dispose();
             }
 

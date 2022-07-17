@@ -30,23 +30,23 @@ To configure all RDP relevant settings, use the properties of the `FreeRdpConfig
 
 #### Connect and Disconnect
 Once the configuration is set, call:
-```
+```csharp
 FreeRdpControl.Connect();
 ```
 to start a connection.
 
-> **Note:**  
-> Before you call `Connect();`, make sure you have set the `Server` (hostname or IP address) and the credential properties (`Username` and `Password`). An exception will be thrown if these properties are not set.
+> **Note**  
+> Before you call `Connect();`, make sure you have set the `Server` (hostname or IP address) and the credential properties (`Username` and `Password`). An exception will be thrown if these properties are not set. If you connect to a Windows machine using the IP address, the connection may fail because the subject name of the certificate doesn't match. In this case, set `IgnoreCertificates` to `true`.
 
 To disconnect, simply call:
-```
+```csharp
 FreeRdpControl.Disconnect();
 ```
 #### Zoom
 Before you call `Connect();`, you can set the remote zoom level (DPI) using the following properties: 
 `int DesktopScaleFactor` (valid values between 100 and 500)  
 `int DeviceScaleFactor` (valid values: 100, 140, 180)  
-> **Note:** 
+> **Note** 
 > Recommended values are for DeviceScaleFactor  
 > 100 for DesktopScaleFactor of 100  
 > 140 for DesktopScaleFactor between 100 and 199  
@@ -59,7 +59,7 @@ If `FreeRdpConfiguration.AutoScaling` is set to `true`, the initial `DesktopScal
 While connected you can use the following methods to change the remote zoom level:  
 `ZoomIn()`, `ZoomOut()`, `ResetZoom()` and `SetZoomLevel(int scalingInPercent)`
 
-> **Note:**
+> **Note**
 > Calling these methods will kill the `wfreerdp.exe` and restart it using the new scaling values.
 
 #### Subscribe to Events
