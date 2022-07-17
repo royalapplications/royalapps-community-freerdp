@@ -47,6 +47,11 @@ namespace RoyalApps.Community.FreeRdp.WinForms
         public event EventHandler<DisconnectEventArgs>? Disconnected;
 
         /// <summary>
+        /// Raised when the TLS handshake fails because if an incorrect server certificate.
+        /// </summary>
+        public event EventHandler<CertificateErrorEventArgs>? CertificateError;
+        
+        /// <summary>
         /// FreeRdpControl constructor
         /// </summary>
         public FreeRdpControl()
@@ -258,6 +263,22 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             _process.Exited -= Process_Exited;
             _process.Dispose();
             _process = null;
+
+            // invalid cert
+            if (exitCode == 131080 && !Configuration.IgnoreCertificate)
+            {
+                var args = new CertificateErrorEventArgs();
+                Invoke(CertificateError, this, args);
+                if (args.ShouldContinue)
+                {
+                    Configuration.IgnoreCertificate = true;
+                    Invoke(Reconnect);
+                    return;
+                }
+            }
+
+            Configuration.DesktopWidth = _initialDesktopWidth;
+            Configuration.DesktopHeight = _initialDesktopHeight;
 
             Invoke(Disconnected, this, new DisconnectEventArgs((uint) exitCode));
         }
