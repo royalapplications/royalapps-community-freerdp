@@ -55,7 +55,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
         /// Raised when login failed.
         /// </summary>
         public event EventHandler<VerifyCredentialsEventArgs>? VerifyCredentials;
-        
+
         /// <summary>
         /// FreeRdpControl constructor
         /// </summary>
@@ -169,7 +169,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             };
             _process.Exited += Process_Exited;
             _process.Start();
-            Connected?.Invoke(this, EventArgs.Empty);
+            OnConnected();
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
         public void Disconnect()
         {
             KillProcess();
-            Invoke(Disconnected, this, new DisconnectEventArgs(0) {UserInitiated = true});
+            OnDisconnected(new DisconnectEventArgs(0) {UserInitiated = true});
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             };
             SetZoomLevel(newScaleFactor);
         }
-        
+
         private void Process_Exited(object? sender, EventArgs e)
         {
             if (_process is null)
@@ -273,7 +273,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             if (exitCode == 131080 && !Configuration.IgnoreCertificate)
             {
                 var args = new CertificateErrorEventArgs();
-                Invoke(CertificateError, this, args);
+                OnCertificateError(args);
                 if (args.ShouldContinue)
                 {
                     Configuration.IgnoreCertificate = true;
@@ -285,7 +285,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             if (exitCode == 131092)
             {
                 var args = new VerifyCredentialsEventArgs();
-                Invoke(VerifyCredentials, this, args);
+                OnVerifyCredentials(args);
                 if (args.CredentialsApplied)
                 {
                     Configuration.UserName = args.Username;
@@ -295,10 +295,10 @@ namespace RoyalApps.Community.FreeRdp.WinForms
                     return;
                 }
             }
-            
+
             Configuration.DesktopWidth = _initialDesktopWidth;
             Configuration.DesktopHeight = _initialDesktopHeight;
-            Invoke(Disconnected, this, new DisconnectEventArgs((uint) exitCode));
+            OnDisconnected(new DisconnectEventArgs((uint) exitCode));
         }
 
         private void TimerResizeInProgress_Tick(object? sender, EventArgs e)
@@ -362,6 +362,54 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             _process.Exited -= Process_Exited;
             _process.Kill();
             _process = null;
+        }
+
+        private void OnConnected()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(OnConnected);
+                return;
+            }
+
+            var handler = Connected;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnDisconnected(DisconnectEventArgs disconnectEventArgs)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(OnDisconnected, disconnectEventArgs);
+                return;
+            }
+
+            var handler = Disconnected;
+            handler?.Invoke(this, disconnectEventArgs);
+        }
+
+        private void OnCertificateError(CertificateErrorEventArgs certificateErrorEventArgs)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(OnCertificateError, certificateErrorEventArgs);
+                return;
+            }
+
+            var handler = CertificateError;
+            handler?.Invoke(this, certificateErrorEventArgs);
+        }
+
+        private void OnVerifyCredentials(VerifyCredentialsEventArgs verifyCredentialsEventArgs)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(OnVerifyCredentials, verifyCredentialsEventArgs);
+                return;
+            }
+
+            var handler = VerifyCredentials;
+            handler?.Invoke(this, verifyCredentialsEventArgs);
         }
 
         private void Reconnect()
