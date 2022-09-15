@@ -2,7 +2,7 @@
 
 [![NuGet Version](https://img.shields.io/nuget/v/RoyalApps.Community.FreeRdp.WinForms.svg?style=flat)](https://www.nuget.org/packages/RoyalApps.Community.FreeRdp.WinForms) 
 [![NuGet Downloads](https://img.shields.io/nuget/dt/RoyalApps.Community.FreeRdp.WinForms.svg?color=green)](https://www.nuget.org/packages/RoyalApps.Community.FreeRdp.WinForms) 
-[![.NET Framework](https://img.shields.io/badge/.NET%20Framework-%3E%3D%204.7-512bd4)](https://dotnet.microsoft.com/download)
+[![.NET Framework](https://img.shields.io/badge/.NET%20Framework-%3E%3D%204.72-512bd4)](https://dotnet.microsoft.com/download)
 [![.NET](https://img.shields.io/badge/.NET-%3E%3D%20%205.0-blueviolet)](https://dotnet.microsoft.com/download)
 
 RoyalApps.Community.FreeRDP contains projects/packages to easily embed/use [FreeRDP](https://github.com/FreeRDP/FreeRDP) in a Windows (WinForms) application.
