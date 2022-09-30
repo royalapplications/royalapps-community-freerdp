@@ -31,19 +31,19 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Configuration
         /// <summary>
         /// UserName: /u:UserName
         /// </summary>
-        [CommandLineArgument("/u:{0}")]
+        [CommandLineArgument("/u:{0}", "")]
         public string? UserName { get; set; }
 
         /// <summary>
         /// Domain: /d:Domain
         /// </summary>
-        [CommandLineArgument("/d:{0}")]
+        [CommandLineArgument("/d:{0}", "")]
         public string? Domain { get; set; }
 
         /// <summary>
         /// Password: /p:Password
         /// </summary>
-        [CommandLineArgument("/p:\"{0}\"")]
+        [CommandLineArgument("/p:\"{0}\"", "")]
         public string? Password { get; set; }
 
         /// <summary>
@@ -129,19 +129,19 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Configuration
         /// <summary>
         /// GatewayUserName: /gu:GatewayUserName
         /// </summary>
-        [CommandLineArgument("/gu:{0}")]
+        [CommandLineArgument("/gu:{0}", "")]
         public string? GatewayUserName { get; set; }
 
         /// <summary>
         /// GatewayDomain: /gd:GatewayDomain
         /// </summary>
-        [CommandLineArgument("/gd:{0}")]
+        [CommandLineArgument("/gd:{0}", "")]
         public string? GatewayDomain { get; set; }
 
         /// <summary>
         /// GatewayPassword: /gp:GatewayPassword
         /// </summary>
-        [CommandLineArgument("/gp:\"{0}\"")]
+        [CommandLineArgument("/gp:\"{0}\"", "")]
         public string? GatewayPassword { get; set; }
 
         /// <summary>

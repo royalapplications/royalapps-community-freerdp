@@ -19,6 +19,10 @@ namespace RoyalApps.Community.FreeRdp.WinForms
     [Designer("System.Windows.Forms.Design.ParentControlDesigner, System.Design", typeof(IDesigner))]
     public class FreeRdpControl : UserControl
     {
+        private static bool _executableWritten;
+
+        private static readonly ProcessJobTracker ProcessJobTracker = new("royalapps_wfreerdp");
+
         private const string WFREERDP_EXE = "wfreerdp.exe";
 
         private readonly Timer _timerResizeInProgress;
@@ -151,10 +155,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms
 
             var freeRdpPath =
                 Environment.ExpandEnvironmentVariables(Path.Combine(Configuration.TempPath, WFREERDP_EXE));
-            if (!File.Exists(freeRdpPath))
-                File.WriteAllBytes(
-                    freeRdpPath,
-                    GetType().Assembly.GetResourceFileAsBytes(WFREERDP_EXE));
+            VerifyExecutable(freeRdpPath);
 
             var arguments = Configuration.GetArguments();
             _process = new Process
@@ -169,6 +170,9 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             };
             _process.Exited += Process_Exited;
             _process.Start();
+
+            ProcessJobTracker.AddProcess(_process);
+
             OnConnected();
         }
 
@@ -347,6 +351,18 @@ namespace RoyalApps.Community.FreeRdp.WinForms
             > 500 => 500,
             _ => scalingFactor
         };
+
+        private void VerifyExecutable(string freeRdpPath)
+        {
+            if (File.Exists(freeRdpPath) && _executableWritten)
+                return;
+
+            File.WriteAllBytes(
+                freeRdpPath,
+                GetType().Assembly.GetResourceFileAsBytes(WFREERDP_EXE));
+
+            _executableWritten = true;
+        }
 
         private double GetDpiScalingFactor() => DeviceDpi / 96.0;
         private int GetDpiScalingInPercent() => (int) GetDpiScalingFactor() * 100;

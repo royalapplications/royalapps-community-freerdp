@@ -1,44 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Product>RoyalApps.Community.FreeRdp.WinForms</Product>
-		<Description>An embeddable WinForms control which uses wfreerdp.exe</Description>
-		<Company>Royal Apps GmbH</Company>
-		<Copyright>Copyright © $([System.DateTime]::Now.ToString(yyyy)), Royal Apps GmbH, Austria</Copyright>
-		<PackageProjectUrl>https://github.com/royalapplications/royalapps-community-freerdp</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/royalapplications/royalapps-community-freerdp</RepositoryUrl>
-		<PackageIconUrl>https://github.com/royalapplications/royalapps-community-freerdp/blob/main/docs/assets/RoyalApps_1024.png</PackageIconUrl>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageIcon>RoyalApps_1024.png</PackageIcon>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>1.1.4</Version>
-		<Nullable>enable</Nullable>
-		<LangVersion>10</LangVersion>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<NoWarn>NU1701</NoWarn>
-	</PropertyGroup>
+    <PropertyGroup>
+        <Product>RoyalApps.Community.FreeRdp.WinForms</Product>
+        <Description>An embeddable WinForms control which uses wfreerdp.exe</Description>
+        <Company>Royal Apps GmbH</Company>
+        <Copyright>Copyright © $([System.DateTime]::Now.ToString(yyyy)), Royal Apps GmbH, Austria</Copyright>
+        <PackageProjectUrl>https://github.com/royalapplications/royalapps-community-freerdp</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/royalapplications/royalapps-community-freerdp</RepositoryUrl>
+        <PackageIconUrl>https://github.com/royalapplications/royalapps-community-freerdp/blob/main/docs/assets/RoyalApps_1024.png</PackageIconUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>RoyalApps_1024.png</PackageIcon>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Version>1.1.5</Version>
+        <Nullable>enable</Nullable>
+        <LangVersion>10</LangVersion>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>CS8981;NU1701</NoWarn>
+    </PropertyGroup>
 
-	<PropertyGroup>
-		<TargetFrameworks>net472;net5.0-windows;net6.0-windows;net7.0-windows</TargetFrameworks>
-		<RuntimeIdentifier>win</RuntimeIdentifier>
-		<UseWindowsForms>true</UseWindowsForms>
-		<IncludeSymbols>true</IncludeSymbols>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net472;net5.0-windows;net6.0-windows;net7.0-windows</TargetFrameworks>
+        <RuntimeIdentifier>win</RuntimeIdentifier>
+        <UseWindowsForms>true</UseWindowsForms>
+        <IncludeSymbols>true</IncludeSymbols>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DebugType>pdbonly</DebugType>
-		<DebugSymbols>true</DebugSymbols>
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>pdbonly</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="Resources\Images\RoyalApps_1024.png" Pack="true" PackagePath="\" />
-		<None Include="..\..\README.md" Pack="true" PackagePath="\" />
-		<EmbeddedResource Include="Resources\Files\*.*" />
-	</ItemGroup>
+    <ItemGroup>
+        <None Include="Resources\Images\RoyalApps_1024.png" Pack="true" PackagePath="\" />
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+        <EmbeddedResource Include="Resources\Files\*.*" />
+    </ItemGroup>
 
-	<ItemGroup>
-	  <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.1.619-beta">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
 </Project>
