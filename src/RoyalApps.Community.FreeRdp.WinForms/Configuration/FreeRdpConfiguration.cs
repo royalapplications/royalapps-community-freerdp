@@ -300,6 +300,10 @@ public class FreeRdpConfiguration : IValidatableObject
     /// </summary>
     public string TempPath { get; set; } = "%temp%";
 
+    /// <summary>
+    /// AdditionalArgs: Specify one or more additional arguments when wfreerdp.exe is called
+    /// </summary>
+    public string? AdditionalArgs { get; set; }
 
     /// <inheritdoc cref="IValidatableObject"/>
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -375,5 +379,7 @@ public class FreeRdpConfiguration : IValidatableObject
             }
         }
 
+        if (AdditionalArgs != null && !string.IsNullOrWhiteSpace(AdditionalArgs))
+            yield return AdditionalArgs;
     }
 }
