@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
 
-internal class FreeRdpConfigurationTypeConverter : TypeConverter
+internal class ProxyConfigurationTypeConverter : TypeConverter
 {
     public override bool GetPropertiesSupported(ITypeDescriptorContext? context)
     {
@@ -12,7 +12,7 @@ internal class FreeRdpConfigurationTypeConverter : TypeConverter
 
     public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext? context, object? value, Attribute[]? attributes)
     {
-        return TypeDescriptor.GetProperties(typeof(FreeRdpConfiguration));
+        return TypeDescriptor.GetProperties(typeof(ProxyConfiguration));
     }
 
     /// <summary>
@@ -22,9 +22,13 @@ internal class FreeRdpConfigurationTypeConverter : TypeConverter
     /// </summary>
     public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
     {
-        if (destinationType == typeof(string))
+        if (destinationType == null)
             return false;
+        
+        if (destinationType == typeof(string))
+            return true;
 
         return base.CanConvertTo(context, destinationType);
     }
+    
 }
