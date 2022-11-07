@@ -288,7 +288,12 @@ public class FreeRdpConfiguration : IValidatableObject
     /// SmartReconnect: When enabled, the connection will be re-established to adapt to the new desktop size
     /// </summary>
     public bool SmartReconnect { get; set; }
-        
+
+    /// <summary>
+    /// The full path to an alternative wfreerdp.exe
+    /// </summary>
+    public string? Executable { get; set; }
+    
     /// <summary>
     /// TempPath: The directory where wfreerdp.exe is written to if not already available
     /// </summary>
