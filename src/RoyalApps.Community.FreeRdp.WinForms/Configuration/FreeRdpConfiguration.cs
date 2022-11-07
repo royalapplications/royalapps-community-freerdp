@@ -141,7 +141,7 @@ public class FreeRdpConfiguration : IValidatableObject
     public int DesktopHeight { get; set; }
 
     /// <summary>
-    /// KeyboardLayout (0xlayout-id or layout name): /kdb:[0xlayout-id]|[layout-name]
+    /// KeyboardLayout (0xlayout-id or layout name): /kdb:layout:[0xlayout-id]|[layout-name]
     /// </summary>
     [CommandLineArgument("/kbd:{0}")]
     public string? KeyboardLayout { get; set; }
