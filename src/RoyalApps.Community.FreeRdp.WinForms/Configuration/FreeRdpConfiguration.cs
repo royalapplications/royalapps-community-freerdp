@@ -15,154 +15,16 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
 public class FreeRdpConfiguration : IValidatableObject
 {
     /// <summary>
-    /// Server hostname: /v:Server
-    /// </summary>
-    [CommandLineArgument("/v:{0}")]
-    [Required]
-    public string Server { get; set; } = null!;
-
-    /// <summary>
-    /// Port: /port:Port
-    /// </summary>
-    [CommandLineArgument("/port:{0}", 3389)]
-    [Range(0, 65535)]
-    public int Port { get; set; } = 3389;
-
-    /// <summary>
-    /// UserName: /u:UserName
-    /// </summary>
-    [CommandLineArgument("/u:{0}", "")]
-    public string? UserName { get; set; }
-
-    /// <summary>
-    /// Domain: /d:Domain
-    /// </summary>
-    [CommandLineArgument("/d:{0}", "")]
-    public string? Domain { get; set; }
-
-    /// <summary>
-    /// Password: /p:Password
-    /// </summary>
-    [CommandLineArgument("/p:\"{0}\"", "")]
-    public string? Password { get; set; }
-
-    /// <summary>
-    /// NetworkLevelAuthentication (NLA) default on, turn off with: -sec-nla
-    /// </summary>
-    [CommandLineToggleArgument("sec-nla", true)]
-    public bool NetworkLevelAuthentication { get; set; } = true;
-
-    /// <summary>
-    /// The color depth (in bits per pixel) for the control's connection.
-    /// </summary>
-    /// <remarks>
-    /// Command line argument: /bpp:[8|16|24|32]
-    /// </remarks>
-    /// <see href="https://docs.microsoft.com/en-us/windows/win32/termserv/imsrdpclient-colordepth">ColorDepth - Microsoft Documentation</see>
-    [CommandLineArgument("/bpp:{0}", BitsPerPixel.NotSpecified)]
-    public BitsPerPixel ColorDepth { get; set; } = BitsPerPixel.NotSpecified;
-
-    /// <summary>
-    /// DesktopWidth (pixel): /w:DesktopWidth
-    /// </summary>
-    [CommandLineArgument("/w:{0}", 0)]
-    public int DesktopWidth { get; set; }
-
-    /// <summary>
-    /// DesktopHeight (pixel): /h:DesktopHeight
-    /// </summary>
-    [CommandLineArgument("/h:{0}", 0)]
-    public int DesktopHeight { get; set; }
-
-    /// <summary>
-    /// DeviceScaleFactor (100, 140, 180): /scale:DeviceScaleFactor
-    /// Recommended values:
-    /// 100: for DesktopScaleFactor of 100
-    /// 140: for DesktopScaleFactor between 100 and 199
-    /// 180: for DesktopScaleFactor of 200 or more
-    /// </summary>
-    [CommandLineArgument("/scale:{0}", 100)]
-    public int DeviceScaleFactor { get; set; } = 100;
-
-    /// <summary>
-    /// AutoScaling: When enabled, the initial scale factor is determined based on DPI settings 
-    /// </summary>
-    public bool AutoScaling { get; set; }
-
-    /// <summary>
-    /// DesktopScaleFactor in percent (100-500): /scale-desktop:DesktopScaleFactor
-    /// </summary>
-    [CommandLineArgument("/scale-desktop:{0}", 100)]
-    [Range(100, 500)]
-    public int DesktopScaleFactor { get; set; } = 100;
-
-    /// <summary>
-    /// Compression (default off): +compression  
-    /// </summary>
-    [CommandLineToggleArgument("compression")]
-    public bool Compression { get; set; }
-
-    /// <summary>
-    /// BitmapCaching (default on): -bitmap-cache 
-    /// </summary>
-    [CommandLineToggleArgument("bitmap-cache", true)]
-    public bool BitmapCaching { get; set; } = true;
-
-    /// <summary>
     /// ConnectToAdministerServer: /admin
     /// </summary>
     [CommandLineArgument("/admin")]
     public bool ConnectToAdministerServer { get; set; }
 
     /// <summary>
-    /// KeyboardLayout (0xlayout-id or layout name): /kdb:[0xlayout-id]|[layout-name]
+    /// Aero (Desktop Composition - default off): +aero
     /// </summary>
-    [CommandLineArgument("/kbd:{0}")]
-    public string? KeyboardLayout { get; set; }
-
-    /// <summary>
-    /// ProxyConfiguration /proxy:[http|socks5]://[username]:[password]@hostname:port
-    /// </summary>
-    [Required]
-    [CommandLineArgument("{0}")]
-    [TypeConverter(typeof(ProxyConfigurationTypeConverter))]
-    public ProxyConfiguration ProxyConfiguration { get; set; } = new();
-        
-    /// <summary>
-    /// GatewayHostname[:Port]: /g:GatewayHostname[:Port] 
-    /// </summary>
-    [CommandLineArgument("/g:{0}")]
-    public string? GatewayHostname { get; set; }
-
-    /// <summary>
-    /// GatewayUserName: /gu:GatewayUserName
-    /// </summary>
-    [CommandLineArgument("/gu:{0}", "")]
-    public string? GatewayUserName { get; set; }
-
-    /// <summary>
-    /// GatewayDomain: /gd:GatewayDomain
-    /// </summary>
-    [CommandLineArgument("/gd:{0}", "")]
-    public string? GatewayDomain { get; set; }
-
-    /// <summary>
-    /// GatewayPassword: /gp:GatewayPassword
-    /// </summary>
-    [CommandLineArgument("/gp:\"{0}\"", "")]
-    public string? GatewayPassword { get; set; }
-
-    /// <summary>
-    /// StartProgram (Alternate shell): /shell:StartProgram
-    /// </summary>
-    [CommandLineArgument("/shell:\"{0}\"")]
-    public string? StartProgram { get; set; }
-
-    /// <summary>
-    /// WorkDir (Shell working directory): /shell-dir:WorkDir
-    /// </summary>
-    [CommandLineArgument("/shell-dir:\"{0}\"")]
-    public string? WorkDir { get; set; }
+    [CommandLineToggleArgument("aero", false)]
+    public bool Aero { get; set; }
 
     /// <summary>
     /// Sets and retrieves the audio redirection mode and different audio redirection options.
@@ -193,62 +55,62 @@ public class FreeRdpConfiguration : IValidatableObject
     public AudioRedirectionMode AudioRedirectionMode { get; set; } = AudioRedirectionMode.NotSpecified;
 
     /// <summary>
-    /// AudioCaptureRedirectionMode: /mic
+    /// BitmapCaching (default off): +bitmap-cache 
     /// </summary>
-    [CommandLineArgument("/mic")]
-    public bool AudioCaptureRedirectionMode { get; set; }
+    [CommandLineArgument("/cache:bitmap:on", false)]
+    public bool BitmapCaching { get; set; }
 
     /// <summary>
-    /// Network connection type is not specified. The default value of wfreerdp.exe is used.
+    /// The color depth (in bits per pixel) for the control's connection.
     /// </summary>
     /// <remarks>
-    /// Command line argument: /network:[modem|broadband[-low|-high]|wan|lan|auto[detect]]
+    /// Command line argument: /bpp:[8|16|24|32]
     /// </remarks>
-    /// <see href="https://docs.microsoft.com/en-us/windows/win32/termserv/imsrdpclientadvancedsettings7-networkconnectiontype">NetworkConnectionType - Microsoft Documentation</see>
-    [CommandLineArgument("/network:{0}", NetworkConnectionType.NotSpecified)]
-    public NetworkConnectionType NetworkConnectionType { get; set; } = NetworkConnectionType.NotSpecified;
+    /// <see href="https://docs.microsoft.com/en-us/windows/win32/termserv/imsrdpclient-colordepth">ColorDepth - Microsoft Documentation</see>
+    [CommandLineArgument("/bpp:{0}", BitsPerPixel.NotSpecified)]
+    public BitsPerPixel ColorDepth { get; set; } = BitsPerPixel.NotSpecified;
 
     /// <summary>
-    /// RedirectClipboard (default off): +clipboard 
+    /// IgnoreCertificate: /cert:ignore
     /// </summary>
-    [CommandLineToggleArgument("clipboard")]
-    public bool RedirectClipboard { get; set; }
+    [CommandLineArgument("/cert:ignore")]
+    public bool IgnoreCertificate { get; set; }
 
     /// <summary>
-    /// SmoothFonts (default off): +fonts
+    /// RedirectClipboard (default on): -clipboard 
     /// </summary>
-    [CommandLineToggleArgument("fonts")]
-    public bool SmoothFonts { get; set; }
+    [CommandLineToggleArgument("clipboard", true)]
+    public bool RedirectClipboard { get; set; } = true;
 
     /// <summary>
-    /// Aero (Desktop Composition - default off): +aero
+    /// Compression (default on): -compression  
     /// </summary>
-    [CommandLineToggleArgument("aero")]
-    public bool Aero { get; set; }
+    [CommandLineToggleArgument("compression", true)]
+    public bool Compression { get; set; }
 
     /// <summary>
-    /// Window Drag (default off): +window-drag
+    /// Domain: /d:Domain
     /// </summary>
-    [CommandLineToggleArgument("window-drag")]
-    public bool WindowDrag { get; set; }
+    [CommandLineArgument("/d:{0}", "")]
+    public string? Domain { get; set; }
 
     /// <summary>
-    /// MenuAnimations (default: off): +menu-anims
+    /// SmoothFonts (default on): -fonts
     /// </summary>
-    [CommandLineToggleArgument("menu-anims")]
-    public bool MenuAnimations { get; set; }
+    [CommandLineToggleArgument("fonts", true)]
+    public bool SmoothFonts { get; set; } = true;
 
     /// <summary>
-    /// Themes (default: on): -themes
+    /// GatewayHostname[:Port]: /g:GatewayHostname[:Port] 
     /// </summary>
-    [CommandLineToggleArgument("themes", true)]
-    public bool Themes { get; set; } = true;
+    [CommandLineArgument("/g:{0}")]
+    public string? GatewayHostname { get; set; }
 
     /// <summary>
-    /// Wallpaper (default: on): -wallpaper
+    /// GatewayDomain: /gd:GatewayDomain
     /// </summary>
-    [CommandLineToggleArgument("wallpaper", true)]
-    public bool Wallpaper { get; set; } = true;
+    [CommandLineArgument("/gd:{0}", "")]
+    public string? GatewayDomain { get; set; }
 
     /// <summary>
     /// GDI rendering mode.
@@ -261,16 +123,34 @@ public class FreeRdpConfiguration : IValidatableObject
     public GdiRendering GdiRendering { get; set; } = GdiRendering.NotSpecified;
 
     /// <summary>
-    /// IgnoreCertificate: /cert-ignore
+    /// GatewayPassword: /gp:GatewayPassword
     /// </summary>
-    [CommandLineArgument("/cert-ignore")]
-    public bool IgnoreCertificate { get; set; }
+    [CommandLineArgument("/gp:\"{0}\"", "")]
+    public string? GatewayPassword { get; set; }
 
     /// <summary>
-    /// PCB (Preconnection Blob): /pcb:PCB
+    /// GatewayUserName: /gu:GatewayUserName
     /// </summary>
-    [CommandLineArgument("/pcb:{0}")]
-    public string? PCB { get; set; }
+    [CommandLineArgument("/gu:{0}", "")]
+    public string? GatewayUserName { get; set; }
+
+    /// <summary>
+    /// DesktopHeight (pixel): /h:DesktopHeight
+    /// </summary>
+    [CommandLineArgument("/h:{0}", 0)]
+    public int DesktopHeight { get; set; }
+
+    /// <summary>
+    /// KeyboardLayout (0xlayout-id or layout name): /kdb:[0xlayout-id]|[layout-name]
+    /// </summary>
+    [CommandLineArgument("/kbd:{0}")]
+    public string? KeyboardLayout { get; set; }
+
+    /// <summary>
+    /// MenuAnimations (default: off): +menu-anims
+    /// </summary>
+    [CommandLineToggleArgument("menu-anims", false)]
+    public bool MenuAnimations { get; set; }
 
     /// <summary>
     /// ProtocolSecurityNegotiation (default on): -nego
@@ -279,16 +159,130 @@ public class FreeRdpConfiguration : IValidatableObject
     public bool ProtocolSecurityNegotiation { get; set; } = true;
 
     /// <summary>
-    /// VMId (use port 2179, disable negotiation): /vmconnect:VMId
+    /// Network connection type is not specified. The default value of wfreerdp.exe is used.
     /// </summary>
-    [CommandLineArgument("/vmconnect:{0}")]
-    public string? VMId { get; set; }
+    /// <remarks>
+    /// Command line argument: /network:[modem|broadband[-low|-high]|wan|lan|auto[detect]]
+    /// </remarks>
+    /// <see href="https://docs.microsoft.com/en-us/windows/win32/termserv/imsrdpclientadvancedsettings7-networkconnectiontype">NetworkConnectionType - Microsoft Documentation</see>
+    [CommandLineArgument("/network:{0}", NetworkConnectionType.NotSpecified)]
+    public NetworkConnectionType NetworkConnectionType { get; set; } = NetworkConnectionType.NotSpecified;
+
+    /// <summary>
+    /// Password: /p:Password
+    /// </summary>
+    [CommandLineArgument("/p:\"{0}\"", "")]
+    public string? Password { get; set; }
 
     /// <summary>
     /// ParentWindow: /parent-window:ParentWindow
     /// </summary>
     [CommandLineArgument("/parent-window:{0}", 0)]
     public long ParentWindow { get; set; }
+
+    /// <summary>
+    /// PCB (Preconnection Blob): /pcb:PCB
+    /// </summary>
+    [CommandLineArgument("/pcb:{0}")]
+    public string? PCB { get; set; }
+
+    /// <summary>
+    /// Port: /port:Port
+    /// </summary>
+    [CommandLineArgument("/port:{0}", 3389)]
+    [Range(0, 65535)]
+    public int Port { get; set; } = 3389;
+
+    /// <summary>
+    /// ProxyConfiguration /proxy:[http|socks5]://[username]:[password]@hostname:port
+    /// </summary>
+    [Required]
+    [CommandLineArgument("{0}")]
+    [TypeConverter(typeof(ProxyConfigurationTypeConverter))]
+    public ProxyConfiguration ProxyConfiguration { get; set; } = new();
+
+    /// <summary>
+    /// DeviceScaleFactor (100, 140, 180): /scale:DeviceScaleFactor
+    /// Recommended values:
+    /// 100: for DesktopScaleFactor of 100
+    /// 140: for DesktopScaleFactor between 100 and 199
+    /// 180: for DesktopScaleFactor of 200 or more
+    /// </summary>
+    [CommandLineArgument("/scale:{0}", 100)]
+    public int DeviceScaleFactor { get; set; } = 100;
+
+    /// <summary>
+    /// DesktopScaleFactor in percent (100-500): /scale-desktop:DesktopScaleFactor
+    /// </summary>
+    [CommandLineArgument("/scale-desktop:{0}", 100)]
+    [Range(100, 500)]
+    public int DesktopScaleFactor { get; set; } = 100;
+
+    /// <summary>
+    /// NetworkLevelAuthentication (NLA) default on, turn off with: -sec-nla
+    /// </summary>
+    [CommandLineToggleArgument("sec-nla", true)]
+    public bool NetworkLevelAuthentication { get; set; } = true;
+
+    /// <summary>
+    /// StartProgram (Alternate shell): /shell:StartProgram
+    /// </summary>
+    [CommandLineArgument("/shell:\"{0}\"")]
+    public string? StartProgram { get; set; }
+
+    /// <summary>
+    /// WorkDir (Shell working directory): /shell-dir:WorkDir
+    /// </summary>
+    [CommandLineArgument("/shell-dir:\"{0}\"")]
+    public string? WorkDir { get; set; }
+
+    /// <summary>
+    /// Themes (default: on): -themes
+    /// </summary>
+    [CommandLineToggleArgument("themes", true)]
+    public bool Themes { get; set; } = true;
+
+    /// <summary>
+    /// UserName: /u:UserName
+    /// </summary>
+    [CommandLineArgument("/u:{0}", "")]
+    public string? UserName { get; set; }
+
+    /// <summary>
+    /// Server hostname: /v:Server
+    /// </summary>
+    [CommandLineArgument("/v:{0}")]
+    [Required]
+    public string Server { get; set; } = null!;
+
+    /// <summary>
+    /// VMId (use port 2179, disable negotiation): /vmconnect:VMId
+    /// </summary>
+    [CommandLineArgument("/vmconnect:{0}")]
+    public string? VMId { get; set; }
+
+    /// <summary>
+    /// DesktopWidth (pixel): /w:DesktopWidth
+    /// </summary>
+    [CommandLineArgument("/w:{0}", 0)]
+    public int DesktopWidth { get; set; }
+
+    /// <summary>
+    /// Wallpaper (default: on): -wallpaper
+    /// </summary>
+    [CommandLineToggleArgument("wallpaper", true)]
+    public bool Wallpaper { get; set; } = true;
+
+    /// <summary>
+    /// Window Drag (default off): +window-drag
+    /// </summary>
+    [CommandLineToggleArgument("window-drag", false)]
+    public bool WindowDrag { get; set; }
+
+    /// <summary>
+    /// AutoScaling: When enabled, the initial scale factor is determined based on DPI settings 
+    /// </summary>
+    public bool AutoScaling { get; set; }
 
     /// <summary>
     /// SmartReconnect: When enabled, the connection will be re-established to adapt to the new desktop size
