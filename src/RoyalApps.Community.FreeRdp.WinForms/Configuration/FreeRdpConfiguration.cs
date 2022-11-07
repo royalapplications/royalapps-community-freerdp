@@ -143,7 +143,7 @@ public class FreeRdpConfiguration : IValidatableObject
     /// <summary>
     /// KeyboardLayout (0xlayout-id or layout name): /kdb:layout:[0xlayout-id]|[layout-name]
     /// </summary>
-    [CommandLineArgument("/kbd:{0}")]
+    [CommandLineArgument("/kbd:layout:{0}")]
     public string? KeyboardLayout { get; set; }
 
     /// <summary>
