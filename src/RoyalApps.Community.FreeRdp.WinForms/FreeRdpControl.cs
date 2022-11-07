@@ -152,10 +152,20 @@ public class FreeRdpControl : UserControl
 
         // AutoScrollMinSize is required to get scrollbars to appear
         AutoScrollMinSize = _renderTarget.Size;
-
-        var freeRdpPath =
-            Environment.ExpandEnvironmentVariables(Path.Combine(Configuration.TempPath, WFREERDP_EXE));
-        VerifyExecutable(freeRdpPath);
+        
+        var freeRdpPath = Environment.ExpandEnvironmentVariables(Path.Combine(Configuration.TempPath, WFREERDP_EXE));
+        if (!string.IsNullOrWhiteSpace(Configuration.Executable))
+        {
+            var customPath = Environment.ExpandEnvironmentVariables(Configuration.Executable!);
+            if (File.Exists(customPath))
+            {
+                freeRdpPath = customPath;
+            }
+        }
+        else
+        {
+            VerifyExecutable(freeRdpPath);
+        }
 
         var arguments = Configuration.GetArguments();
         _process = new Process
