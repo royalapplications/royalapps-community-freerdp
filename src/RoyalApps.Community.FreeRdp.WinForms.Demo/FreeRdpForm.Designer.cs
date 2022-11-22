@@ -48,7 +48,6 @@
             // FreeRdpControl
             // 
             freeRdpConfiguration1.Aero = false;
-            freeRdpConfiguration1.AudioCaptureRedirectionMode = false;
             freeRdpConfiguration1.AudioRedirectionMode = RoyalApps.Community.FreeRdp.WinForms.Configuration.AudioRedirectionMode.NotSpecified;
             freeRdpConfiguration1.AutoScaling = true;
             freeRdpConfiguration1.BitmapCaching = true;

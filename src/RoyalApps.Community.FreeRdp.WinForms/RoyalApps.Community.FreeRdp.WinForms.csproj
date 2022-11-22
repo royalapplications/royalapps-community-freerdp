@@ -11,7 +11,7 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>RoyalApps_1024.png</PackageIcon>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Version>1.2.6</Version>
+        <Version>1.2.7</Version>
         <Nullable>enable</Nullable>
         <LangVersion>10</LangVersion>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -20,7 +20,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFrameworks>net472;net5.0-windows;net6.0-windows;net7.0-windows</TargetFrameworks>
+        <TargetFrameworks>net472;net6.0-windows;net7.0-windows</TargetFrameworks>
         <RuntimeIdentifier>win</RuntimeIdentifier>
         <UseWindowsForms>true</UseWindowsForms>
         <IncludeSymbols>true</IncludeSymbols>
