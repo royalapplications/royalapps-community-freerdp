@@ -394,6 +394,9 @@ public class FreeRdpControl : UserControl
     {
         if (InvokeRequired)
         {
+            if (IsDisposed)
+                return;
+
             Invoke(OnConnected);
             return;
         }
@@ -406,6 +409,9 @@ public class FreeRdpControl : UserControl
     {
         if (InvokeRequired)
         {
+            if (IsDisposed)
+                return;
+            
             Invoke(OnDisconnected, disconnectEventArgs);
             return;
         }
@@ -418,6 +424,9 @@ public class FreeRdpControl : UserControl
     {
         if (InvokeRequired)
         {
+            if (IsDisposed)
+                return;
+
             Invoke(OnCertificateError, certificateErrorEventArgs);
             return;
         }
@@ -430,6 +439,9 @@ public class FreeRdpControl : UserControl
     {
         if (InvokeRequired)
         {
+            if (IsDisposed)
+                return;
+
             Invoke(OnVerifyCredentials, verifyCredentialsEventArgs);
             return;
         }
