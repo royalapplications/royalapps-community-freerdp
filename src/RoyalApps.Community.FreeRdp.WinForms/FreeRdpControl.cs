@@ -105,9 +105,13 @@ public class FreeRdpControl : UserControl
     {
         switch ((uint)m.Msg)
         {
-            // case PInvoke.WM_MOUSEACTIVATE:
-            //     SetFocusToFreeRdpWindow();
-            //     break;                
+            case PInvoke.WM_MOUSEACTIVATE:
+                if (!_renderTarget.Focused)
+                {
+                    _renderTarget.Focus();
+                    SetFocusToFreeRdpWindow();
+                }
+                break;                
             case PInvoke.WM_SETFOCUS:
                 SetFocusToFreeRdpWindow();
                 break;
