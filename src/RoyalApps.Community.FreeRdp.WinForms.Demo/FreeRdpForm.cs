@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
 using Ookii.Dialogs.WinForms;
+using RoyalApps.Community.FreeRdp.WinForms.Configuration;
 
 namespace RoyalApps.Community.FreeRdp.WinForms.Demo;
 
@@ -41,6 +42,12 @@ public partial class FreeRdpForm : Form
 
         _form.Size = new Size(800, 1000);
         _propertyGrid.Parent = _form;
+
+        // FreeRdpControl.Configuration.Server = "";
+        // FreeRdpControl.Configuration.IgnoreCertificate = true;
+        // FreeRdpControl.Configuration.UserName = "";
+        // FreeRdpControl.Configuration.Password = "";
+        // FreeRdpControl.Configuration.Executable = @"D:\Source\FreeRDP\Debug\wfreerdp.exe";
     }
     
     private void ExitMenuItem_Click(object sender, EventArgs e)

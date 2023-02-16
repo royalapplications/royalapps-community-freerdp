@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Windows.Win32;
 using RoyalApps.Community.FreeRdp.WinForms.Configuration;
 using RoyalApps.Community.FreeRdp.WinForms.Extensions;
 
@@ -29,6 +30,8 @@ public class FreeRdpControl : UserControl
     private readonly UserControl _renderTarget;
     private Size _previousClientSize = Size.Empty;
     private Process? _process;
+    private IntPtr _freeRdpWindowHandle = IntPtr.Zero;
+    
     private int _initialZoomFactor = 100;
     private int _currentZoomFactor = 100;
     private int _initialDesktopWidth = -1;
@@ -95,6 +98,24 @@ public class FreeRdpControl : UserControl
     }
 
     /// <summary>
+    /// Handle some WndProc messages 
+    /// </summary>
+    /// <param name="m"></param>
+    protected override void WndProc(ref Message m)
+    {
+        switch ((uint)m.Msg)
+        {
+            // case PInvoke.WM_MOUSEACTIVATE:
+            //     SetFocusToFreeRdpWindow();
+            //     break;                
+            case PInvoke.WM_SETFOCUS:
+                SetFocusToFreeRdpWindow();
+                break;
+        }
+        base.WndProc(ref m);
+    }
+
+    /// <summary>
     /// OnLoad override
     /// </summary>
     /// <param name="e">EventArgs</param>
@@ -127,6 +148,8 @@ public class FreeRdpControl : UserControl
         if (_process is {HasExited: false})
             return;
 
+        _freeRdpWindowHandle = IntPtr.Zero;
+        
         ApplyAutoScaling();
 
         if (Configuration.DesktopWidth == 0 || Configuration.DesktopHeight == 0)
@@ -454,5 +477,13 @@ public class FreeRdpControl : UserControl
     {
         KillProcess();
         Connect();
+    }
+    
+    private void SetFocusToFreeRdpWindow()
+    {
+        if (_freeRdpWindowHandle == IntPtr.Zero)
+            _freeRdpWindowHandle = WindowHelper.GetFreeRdpWindow(_renderTarget.Handle);
+
+        WindowHelper.SendFocusMessage(_freeRdpWindowHandle);
     }
 }
