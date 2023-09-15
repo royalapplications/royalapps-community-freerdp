@@ -3,14 +3,21 @@ using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
 using Ookii.Dialogs.WinForms;
+using RoyalApps.Community.FreeRdp.WinForms.Configuration;
+using Simple.CredentialManager;
 
 namespace RoyalApps.Community.FreeRdp.WinForms.Demo;
 
 public partial class FreeRdpForm : Form
 {
+    private const string TargetPrefix = "TERMSRV/";
 
     private readonly Form _form;
     private readonly PropertyGrid _propertyGrid;
+    private Credential? _credential;
+    private Credential? _credentialGateway;
+    private bool _credentialExisted;
+    private bool _credentialGatewayExisted;
     
     public FreeRdpForm()
     {
@@ -52,14 +59,12 @@ public partial class FreeRdpForm : Form
     {
         if (string.IsNullOrWhiteSpace(FreeRdpControl.Configuration.Server))
         {
-            using var inputDialog = new InputDialog
-            {
-                WindowTitle = @"Server Required",
-                MainInstruction = @"Please enter a server name or IP address",
-                Content = @"Note: The FreeRdpControl will throw an exception if the Server property is not specified.",
-                Input = FreeRdpControl.Configuration.Server
-            };
-            
+            using var inputDialog = new InputDialog();
+            inputDialog.WindowTitle = @"Server Required";
+            inputDialog.MainInstruction = @"Please enter a server name or IP address";
+            inputDialog.Content = @"Note: The FreeRdpControl will throw an exception if the Server property is not specified.";
+            inputDialog.Input = FreeRdpControl.Configuration.Server;
+
             if (inputDialog.ShowDialog(this) == DialogResult.Cancel ||
                 string.IsNullOrWhiteSpace(inputDialog.Input))
                 return;
@@ -77,6 +82,10 @@ public partial class FreeRdpForm : Form
                 : credentials.Domain;
             FreeRdpControl.Configuration.Password = credentials?.Password;
         }
+
+        _credential = HandleMainCredentials(FreeRdpControl.Configuration, out _credentialExisted);
+        _credentialGateway = HandleGatewayCredentials(FreeRdpControl.Configuration, out _credentialGatewayExisted);
+        
         FreeRdpControl.Connect();
     }
 
@@ -106,6 +115,11 @@ public partial class FreeRdpForm : Form
         _form.Show(this);
     }
 
+    private void UseCredManMenuItem_Click(object? sender, EventArgs e)
+    {
+        UseCredManMenuItem.Checked = !UseCredManMenuItem.Checked;
+    }
+
     private void FreeRdpControl_Connected(object sender, EventArgs e)
     {
         ConnectMenuItem.Enabled = false;
@@ -118,6 +132,17 @@ public partial class FreeRdpForm : Form
         ConnectMenuItem.Enabled = true;
         DisconnectMenuItem.Enabled = false;
         _propertyGrid.SelectedObject = FreeRdpControl.Configuration;
+
+        if (!_credentialExisted)
+            _credential?.Delete();
+        _credential?.Dispose();
+        _credential = null;
+
+        if (!_credentialGatewayExisted)
+            _credentialGateway?.Delete();
+        _credentialGateway?.Dispose();
+        _credentialGateway = null;
+        
         if (e.UserInitiated)
             return;
         MessageBox.Show(this, e.ErrorMessage, @"RDP Session Terminated", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -138,20 +163,79 @@ public partial class FreeRdpForm : Form
         var credentials = GetCredentialFromDialog(@"An authentication error occurred. Login failed. Please verify your credentials.");
         if (credentials == null)
             return;
-        e.SetCredentials(credentials.UserName, credentials.Domain, credentials.Password);
+
+        if (UseCredManMenuItem.Checked)
+        {
+            FreeRdpControl.Configuration.UserName = credentials.UserName;
+            FreeRdpControl.Configuration.Domain = credentials.Domain;
+            FreeRdpControl.Configuration.Password = credentials.Password;
+            _credential = HandleMainCredentials(FreeRdpControl.Configuration, out _);
+            e.SetCredentials(null, null, null);
+        }
+        else
+        {
+            e.SetCredentials(credentials.UserName, credentials.Domain, credentials.Password);
+        }
     }
 
     private NetworkCredential? GetCredentialFromDialog(string mainInstruction)
     {
-        using var credentialDialog = new CredentialDialog
-        {
-            Target = FreeRdpControl.Configuration.Server,
-            WindowTitle = @"Credentials Required",
-            MainInstruction = mainInstruction,
-            Content = @"Note: The FreeRdpControl will throws an exception if no credentials are provided.",
-            ShowSaveCheckBox = false,
-        };
+        using var credentialDialog = new CredentialDialog();
+        credentialDialog.Target = FreeRdpControl.Configuration.Server;
+        credentialDialog.WindowTitle = @"Credentials Required";
+        credentialDialog.MainInstruction = mainInstruction;
+        credentialDialog.Content = @"Note: The FreeRdpControl will throws an exception if no credentials are provided.";
+        credentialDialog.ShowSaveCheckBox = false;
         credentialDialog.ShowDialog(this);
         return credentialDialog.Credentials;
+    }
+
+    private Credential? HandleMainCredentials(FreeRdpConfiguration configuration, out bool credentialExisted)
+    {
+        credentialExisted = false;
+        
+        if (!UseCredManMenuItem.Checked)
+            return null;
+        
+        var credential = new Credential {Target = $"{TargetPrefix}{configuration.Server}"};
+        credentialExisted = credential.Load();
+        credential.Username = string.IsNullOrWhiteSpace(configuration.Domain) 
+            ? configuration.UserName 
+            : $"{configuration.Domain}\\{configuration.UserName}";
+        credential.Password = configuration.Password;
+        credential.Save();
+
+        configuration.UserName = null;
+        configuration.Domain = null;
+        configuration.Password = null;
+        return credential;
+    }
+    
+    private Credential? HandleGatewayCredentials(FreeRdpConfiguration configuration, out bool credentialExisted)
+    {
+        credentialExisted = false;
+        
+        if (!UseCredManMenuItem.Checked)
+            return null;
+
+        if (string.IsNullOrWhiteSpace(configuration.GatewayHostname) &&
+            string.IsNullOrWhiteSpace(configuration.GatewayUserName) &&
+            string.IsNullOrWhiteSpace(configuration.GatewayPassword))
+        {
+            return null;
+        }
+
+        var credential = new Credential {Target = $"{TargetPrefix}{configuration.GatewayHostname}"};
+        credentialExisted = credential.Load();
+        credential.Username = string.IsNullOrWhiteSpace(configuration.GatewayDomain) 
+            ? configuration.GatewayUserName 
+            : $"{configuration.GatewayDomain}\\{configuration.GatewayUserName}";
+        credential.Password = configuration.GatewayPassword;
+        credential.Save();
+
+        configuration.GatewayUserName = null;
+        configuration.GatewayDomain = null;
+        configuration.GatewayPassword = null;
+        return credential;
     }
 }

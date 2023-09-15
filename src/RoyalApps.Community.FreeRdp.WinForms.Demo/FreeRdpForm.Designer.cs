@@ -38,6 +38,7 @@
             this.DisconnectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.SettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.UseCredManMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ResetZoomMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ZoomInMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -133,7 +134,9 @@
             this.ZoomOutMenuItem,
             this.ResetZoomMenuItem,
             this.Separator1,
-            this.SettingsMenuItem});
+            this.SettingsMenuItem,
+            this.UseCredManMenuItem
+            });
             this.ConnectionMenuItem.Name = "ConnectionMenuItem";
             this.ConnectionMenuItem.Size = new System.Drawing.Size(157, 38);
             this.ConnectionMenuItem.Text = "&Connection";
@@ -164,6 +167,13 @@
             this.SettingsMenuItem.Size = new System.Drawing.Size(359, 44);
             this.SettingsMenuItem.Text = "&Settings...";
             this.SettingsMenuItem.Click += new System.EventHandler(this.SettingsMenuItem_Click);
+            //
+            // UseCredManMenuItem
+            //
+            this.UseCredManMenuItem.Name = "UseCredManMenuItem";
+            this.UseCredManMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.UseCredManMenuItem.Text = "&Use Credential Manager";
+            this.UseCredManMenuItem.Click += new System.EventHandler(this.UseCredManMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -223,5 +233,6 @@
         private System.Windows.Forms.ToolStripMenuItem ZoomInMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ZoomOutMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ResetZoomMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem UseCredManMenuItem;
     }
 }
