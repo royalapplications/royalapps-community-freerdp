@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -10,7 +11,7 @@ internal static class AssemblyExtensions
     {
         using var stream = GetResourceStream(assembly, resourceName);
         if (stream == null)
-            return new byte[0];
+            return Array.Empty<byte>();
         using var streamReader = new StreamReader(stream);
         using var memoryStream = new MemoryStream();
         streamReader.BaseStream.CopyTo(memoryStream);

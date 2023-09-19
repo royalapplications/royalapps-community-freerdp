@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Ookii.Dialogs.WinForms" Version="4.0.0" />
+    <PackageReference Include="Simple.CredentialManager" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

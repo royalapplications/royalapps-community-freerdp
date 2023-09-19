@@ -6,10 +6,10 @@ using Windows.Win32.Foundation;
 
 namespace RoyalApps.Community.FreeRdp.WinForms;
 
-internal class WindowHelper
+internal static class WindowHelper
 {
     [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-    static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+    private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
     
     public static IntPtr GetFreeRdpWindow(IntPtr parentWindowHandle)
     {
