@@ -12,5 +12,4 @@ internal class CommandLineToggleArgumentAttribute : Attribute
         ToggleText = toggleText;
         DefaultValue = defaultValue;
     }
-
 }

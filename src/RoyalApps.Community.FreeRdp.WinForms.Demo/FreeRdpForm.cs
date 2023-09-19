@@ -72,11 +72,11 @@ public partial class FreeRdpForm : Form
             FreeRdpControl.Configuration.Server = inputDialog.Input;
         }
 
-        if (string.IsNullOrEmpty(FreeRdpControl.Configuration.UserName) || 
+        if (string.IsNullOrEmpty(FreeRdpControl.Configuration.Username) || 
             string.IsNullOrEmpty(FreeRdpControl.Configuration.Password))
         {
             var credentials = GetCredentialFromDialog(@"Please enter a username and password");
-            FreeRdpControl.Configuration.UserName = credentials?.UserName;
+            FreeRdpControl.Configuration.Username = credentials?.UserName;
             FreeRdpControl.Configuration.Domain = string.IsNullOrWhiteSpace(credentials?.Domain) 
                 ? null 
                 : credentials.Domain;
@@ -166,7 +166,7 @@ public partial class FreeRdpForm : Form
 
         if (UseCredManMenuItem.Checked)
         {
-            FreeRdpControl.Configuration.UserName = credentials.UserName;
+            FreeRdpControl.Configuration.Username = credentials.UserName;
             FreeRdpControl.Configuration.Domain = credentials.Domain;
             FreeRdpControl.Configuration.Password = credentials.Password;
             _credential = HandleMainCredentials(FreeRdpControl.Configuration, out _);
@@ -200,12 +200,12 @@ public partial class FreeRdpForm : Form
         var credential = new Credential {Target = $"{TargetPrefix}{configuration.Server}"};
         credentialExisted = credential.Load();
         credential.Username = string.IsNullOrWhiteSpace(configuration.Domain) 
-            ? configuration.UserName 
-            : $"{configuration.Domain}\\{configuration.UserName}";
+            ? configuration.Username 
+            : $"{configuration.Domain}\\{configuration.Username}";
         credential.Password = configuration.Password;
         credential.Save();
 
-        configuration.UserName = null;
+        configuration.Username = null;
         configuration.Domain = null;
         configuration.Password = null;
         return credential;
@@ -218,24 +218,24 @@ public partial class FreeRdpForm : Form
         if (!UseCredManMenuItem.Checked)
             return null;
 
-        if (string.IsNullOrWhiteSpace(configuration.GatewayHostname) &&
-            string.IsNullOrWhiteSpace(configuration.GatewayUserName) &&
-            string.IsNullOrWhiteSpace(configuration.GatewayPassword))
+        if (string.IsNullOrWhiteSpace(configuration.Gateway.Hostname) &&
+            string.IsNullOrWhiteSpace(configuration.Gateway.Username) &&
+            string.IsNullOrWhiteSpace(configuration.Gateway.Password))
         {
             return null;
         }
 
-        var credential = new Credential {Target = $"{TargetPrefix}{configuration.GatewayHostname}"};
+        var credential = new Credential {Target = $"{TargetPrefix}{configuration.Gateway.Hostname}"};
         credentialExisted = credential.Load();
-        credential.Username = string.IsNullOrWhiteSpace(configuration.GatewayDomain) 
-            ? configuration.GatewayUserName 
-            : $"{configuration.GatewayDomain}\\{configuration.GatewayUserName}";
-        credential.Password = configuration.GatewayPassword;
+        credential.Username = string.IsNullOrWhiteSpace(configuration.Gateway.Domain) 
+            ? configuration.Gateway.Username 
+            : $"{configuration.Gateway.Domain}\\{configuration.Gateway.Username}";
+        credential.Password = configuration.Gateway.Password;
         credential.Save();
 
-        configuration.GatewayUserName = null;
-        configuration.GatewayDomain = null;
-        configuration.GatewayPassword = null;
+        configuration.Gateway.Username = null;
+        configuration.Gateway.Domain = null;
+        configuration.Gateway.Password = null;
         return credential;
     }
 }

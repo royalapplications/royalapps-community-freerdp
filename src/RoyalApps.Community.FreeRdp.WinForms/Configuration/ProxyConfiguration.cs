@@ -58,7 +58,7 @@ public class ProxyConfiguration : IValidatableObject
         
         var builder = new StringBuilder("/proxy:");
         builder.Append(
-            ProxyMode == ProxyMode.Socks5 
+            ProxyMode == ProxyMode.SOCKS5 
                 ? "socks5://" 
                 : "http://");
 

@@ -48,45 +48,6 @@
             // 
             // FreeRdpControl
             // 
-            freeRdpConfiguration1.Aero = false;
-            freeRdpConfiguration1.AudioRedirectionMode = RoyalApps.Community.FreeRdp.WinForms.Configuration.AudioRedirectionMode.NotSpecified;
-            freeRdpConfiguration1.AutoScaling = true;
-            freeRdpConfiguration1.BitmapCaching = true;
-            freeRdpConfiguration1.ColorDepth = RoyalApps.Community.FreeRdp.WinForms.Configuration.BitsPerPixel.NotSpecified;
-            freeRdpConfiguration1.Compression = false;
-            freeRdpConfiguration1.ConnectToAdministerServer = false;
-            freeRdpConfiguration1.DesktopHeight = 0;
-            freeRdpConfiguration1.DesktopScaleFactor = 100;
-            freeRdpConfiguration1.DesktopWidth = 0;
-            freeRdpConfiguration1.DeviceScaleFactor = 100;
-            freeRdpConfiguration1.Domain = null;
-            freeRdpConfiguration1.GatewayDomain = null;
-            freeRdpConfiguration1.GatewayHostname = null;
-            freeRdpConfiguration1.GatewayPassword = null;
-            freeRdpConfiguration1.GatewayUserName = null;
-            freeRdpConfiguration1.GdiRendering = RoyalApps.Community.FreeRdp.WinForms.Configuration.GdiRendering.NotSpecified;
-            freeRdpConfiguration1.IgnoreCertificate = false;
-            freeRdpConfiguration1.KeyboardLayout = null;
-            freeRdpConfiguration1.MenuAnimations = false;
-            freeRdpConfiguration1.NetworkConnectionType = RoyalApps.Community.FreeRdp.WinForms.Configuration.NetworkConnectionType.NotSpecified;
-            freeRdpConfiguration1.NetworkLevelAuthentication = true;
-            freeRdpConfiguration1.ParentWindow = ((long)(0));
-            freeRdpConfiguration1.Password = null;
-            freeRdpConfiguration1.PCB = null;
-            freeRdpConfiguration1.Port = 3389;
-            freeRdpConfiguration1.ProtocolSecurityNegotiation = true;
-            freeRdpConfiguration1.RedirectClipboard = false;
-            freeRdpConfiguration1.Server = null;
-            freeRdpConfiguration1.SmoothFonts = false;
-            freeRdpConfiguration1.StartProgram = null;
-            freeRdpConfiguration1.TempPath = "%temp%";
-            freeRdpConfiguration1.Themes = true;
-            freeRdpConfiguration1.UserName = null;
-            freeRdpConfiguration1.VMId = null;
-            freeRdpConfiguration1.Wallpaper = true;
-            freeRdpConfiguration1.WindowDrag = false;
-            freeRdpConfiguration1.WorkDir = null;
-            this.FreeRdpControl.Configuration = freeRdpConfiguration1;
             this.FreeRdpControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FreeRdpControl.Location = new System.Drawing.Point(0, 40);
             this.FreeRdpControl.Name = "FreeRdpControl";

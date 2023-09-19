@@ -14,14 +14,21 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
 [TypeConverter(typeof(FreeRdpConfigurationTypeConverter))]
 public class FreeRdpConfiguration : IValidatableObject
 {
-    /// <summary>
-    /// ConnectToAdministerServer: /admin
-    /// </summary>
-    [CommandLineArgument("/admin")]
-    public bool ConnectToAdministerServer { get; set; }
+    #region --- CLI ---
 
     /// <summary>
-    /// Aero (Desktop Composition - default off): +aero
+    /// AdditionalArguments: Specify one or more additional arguments when wfreerdp.exe is called
+    /// </summary>
+    public string? AdditionalArguments { get; set; }
+
+    /// <summary>
+    /// Admin (or console) session
+    /// </summary>
+    [CommandLineArgument("/admin")]
+    public bool Admin { get; set; }
+
+    /// <summary>
+    /// Desktop composition
     /// </summary>
     [CommandLineToggleArgument("aero", false)]
     public bool Aero { get; set; }
@@ -52,16 +59,22 @@ public class FreeRdpConfiguration : IValidatableObject
     /// </remarks>
     /// <see href="https://docs.microsoft.com/en-us/windows/win32/termserv/imsrdpclientadvancedsettings5-audioredirectionmode">AudioRedirectionMode - Microsoft Documentation</see>
     [CommandLineArgument("/audio-mode:{0}", AudioRedirectionMode.NotSpecified)]
-    public AudioRedirectionMode AudioRedirectionMode { get; set; } = AudioRedirectionMode.NotSpecified;
+    public AudioRedirectionMode AudioRedirection { get; set; } = AudioRedirectionMode.NotSpecified;
 
     /// <summary>
-    /// BitmapCaching (default off): +bitmap-cache 
+    /// Automatic reconnection
     /// </summary>
-    [CommandLineArgument("/cache:bitmap:on", false)]
-    public bool BitmapCaching { get; set; }
+    [CommandLineArgument("/auto-reconnect")]
+    public bool AutoReconnect { get; set; }
 
     /// <summary>
-    /// The color depth (in bits per pixel) for the control's connection.
+    /// Automatic reconnection maximum retries, 0 for unlimited [0, 1000]
+    /// </summary>
+    [CommandLineArgument("/auto-reconnect-max-retries:{0}", 0)]
+    public int? AutoReconnectMaxRetries { get; set; }
+
+    /// <summary>
+    /// Session bpp (color depth)
     /// </summary>
     /// <remarks>
     /// Command line argument: /bpp:[8|16|24|32]
@@ -71,22 +84,32 @@ public class FreeRdpConfiguration : IValidatableObject
     public BitsPerPixel ColorDepth { get; set; } = BitsPerPixel.NotSpecified;
 
     /// <summary>
-    /// IgnoreCertificate: /cert:ignore
+    /// Cache configuration
     /// </summary>
-    [CommandLineArgument("/cert:ignore")]
-    public bool IgnoreCertificate { get; set; }
+    [Required]
+    [CommandLineArgument("{0}")]
+    [TypeConverter(typeof(CacheConfigurationTypeConverter))]
+    public CacheConfiguration Cache { get; set; } = new();
+
+    /// <summary>
+    /// Certificate configuration
+    /// </summary>
+    [Required]
+    [CommandLineArgument("{0}")]
+    [TypeConverter(typeof(CertificateConfigurationTypeConverter))]
+    public CertificateConfiguration Certificate { get; set; } = new();
 
     /// <summary>
     /// RedirectClipboard (default on): -clipboard 
     /// </summary>
     [CommandLineToggleArgument("clipboard", true)]
-    public bool RedirectClipboard { get; set; } = true;
+    public bool Clipboard { get; set; } = true;
 
     /// <summary>
     /// Compression (default on): -compression  
     /// </summary>
     [CommandLineToggleArgument("compression", true)]
-    public bool Compression { get; set; }
+    public bool Compression { get; set; } = true;
 
     /// <summary>
     /// Domain: /d:Domain
@@ -98,19 +121,15 @@ public class FreeRdpConfiguration : IValidatableObject
     /// SmoothFonts (default on): -fonts
     /// </summary>
     [CommandLineToggleArgument("fonts", true)]
-    public bool SmoothFonts { get; set; } = true;
+    public bool Fonts { get; set; } = true;
 
     /// <summary>
-    /// GatewayHostname[:Port]: /g:GatewayHostname[:Port] 
+    /// Gateway configuration
     /// </summary>
-    [CommandLineArgument("/g:{0}")]
-    public string? GatewayHostname { get; set; }
-
-    /// <summary>
-    /// GatewayDomain: /gd:GatewayDomain
-    /// </summary>
-    [CommandLineArgument("/gd:{0}", "")]
-    public string? GatewayDomain { get; set; }
+    [Required]
+    [CommandLineArgument("{0}")]
+    [TypeConverter(typeof(GatewayConfigurationTypeConverter))]
+    public GatewayConfiguration Gateway { get; set; } = new();
 
     /// <summary>
     /// GDI rendering mode.
@@ -119,20 +138,8 @@ public class FreeRdpConfiguration : IValidatableObject
     /// Command line argument: /gdi:[sw|hw]
     /// </remarks>
     /// <see href="https://docs.microsoft.com/en-us/windows/win32/termserv/imsrdpextendedsettings-property">EnableHardwareMode - Microsoft Documentation</see>
-    [CommandLineArgument("/gdi:{0}", GdiRendering.NotSpecified)]
-    public GdiRendering GdiRendering { get; set; } = GdiRendering.NotSpecified;
-
-    /// <summary>
-    /// GatewayPassword: /gp:GatewayPassword
-    /// </summary>
-    [CommandLineArgument("/gp:\"{0}\"", "")]
-    public string? GatewayPassword { get; set; }
-
-    /// <summary>
-    /// GatewayUserName: /gu:GatewayUserName
-    /// </summary>
-    [CommandLineArgument("/gu:{0}", "")]
-    public string? GatewayUserName { get; set; }
+    [CommandLineArgument("/gdi:{0}", GDIRendering.NotSpecified)]
+    public GDIRendering GDI { get; set; } = GDIRendering.NotSpecified;
 
     /// <summary>
     /// DesktopHeight (pixel): /h:DesktopHeight
@@ -145,6 +152,12 @@ public class FreeRdpConfiguration : IValidatableObject
     /// </summary>
     [CommandLineArgument("/kbd:layout:{0}")]
     public string? KeyboardLayout { get; set; }
+
+    /// <summary>
+    /// Load balance info
+    /// </summary>
+    [CommandLineArgument("/load-balance-info:{0}")]
+    public string? LoadBalanceInfo { get; set; }
 
     /// <summary>
     /// MenuAnimations (default: off): +menu-anims
@@ -166,7 +179,7 @@ public class FreeRdpConfiguration : IValidatableObject
     /// </remarks>
     /// <see href="https://docs.microsoft.com/en-us/windows/win32/termserv/imsrdpclientadvancedsettings7-networkconnectiontype">NetworkConnectionType - Microsoft Documentation</see>
     [CommandLineArgument("/network:{0}", NetworkConnectionType.NotSpecified)]
-    public NetworkConnectionType NetworkConnectionType { get; set; } = NetworkConnectionType.NotSpecified;
+    public NetworkConnectionType Network { get; set; } = NetworkConnectionType.NotSpecified;
 
     /// <summary>
     /// Password: /p:Password
@@ -199,7 +212,13 @@ public class FreeRdpConfiguration : IValidatableObject
     [Required]
     [CommandLineArgument("{0}")]
     [TypeConverter(typeof(ProxyConfigurationTypeConverter))]
-    public ProxyConfiguration ProxyConfiguration { get; set; } = new();
+    public ProxyConfiguration Proxy { get; set; } = new();
+
+    /// <summary>
+    /// Restricted admin mode
+    /// </summary>
+    [CommandLineArgument("/restricted-admin")]
+    public bool RestrictedAdminMode { get; set; }
 
     /// <summary>
     /// DeviceScaleFactor (100, 140, 180): /scale:DeviceScaleFactor
@@ -219,22 +238,24 @@ public class FreeRdpConfiguration : IValidatableObject
     public int DesktopScaleFactor { get; set; } = 100;
 
     /// <summary>
-    /// NetworkLevelAuthentication (NLA) default on, turn off with: -sec-nla
+    /// ProxyConfiguration /proxy:[http|socks5]://[username]:[password]@hostname:port
     /// </summary>
-    [CommandLineToggleArgument("sec-nla", true)]
-    public bool NetworkLevelAuthentication { get; set; } = true;
+    [Required]
+    [CommandLineArgument("{0}")]
+    [TypeConverter(typeof(SecurityConfigurationTypeConverter))]
+    public SecurityConfiguration Security { get; set; } = new();
 
     /// <summary>
     /// StartProgram (Alternate shell): /shell:StartProgram
     /// </summary>
     [CommandLineArgument("/shell:\"{0}\"")]
-    public string? StartProgram { get; set; }
+    public string? Shell { get; set; }
 
     /// <summary>
     /// WorkDir (Shell working directory): /shell-dir:WorkDir
     /// </summary>
     [CommandLineArgument("/shell-dir:\"{0}\"")]
-    public string? WorkDir { get; set; }
+    public string? ShellDir { get; set; }
 
     /// <summary>
     /// Themes (default: on): -themes
@@ -243,10 +264,10 @@ public class FreeRdpConfiguration : IValidatableObject
     public bool Themes { get; set; } = true;
 
     /// <summary>
-    /// UserName: /u:UserName
+    /// Username: /u:Username
     /// </summary>
     [CommandLineArgument("/u:{0}", "")]
-    public string? UserName { get; set; }
+    public string? Username { get; set; }
 
     /// <summary>
     /// Server hostname: /v:Server
@@ -279,15 +300,23 @@ public class FreeRdpConfiguration : IValidatableObject
     [CommandLineToggleArgument("window-drag", false)]
     public bool WindowDrag { get; set; }
 
+    #endregion
+
+    #region --- Control Settings ---
+
     /// <summary>
     /// AutoScaling: When enabled, the initial scale factor is determined based on DPI settings 
     /// </summary>
-    public bool AutoScaling { get; set; }
+    public bool AutoScaling { get; set; } = true;
 
     /// <summary>
     /// SmartReconnect: When enabled, the connection will be re-established to adapt to the new desktop size
     /// </summary>
     public bool SmartReconnect { get; set; }
+
+    #endregion
+    
+    #region --- Executable ---
 
     /// <summary>
     /// The full path to an alternative wfreerdp.exe
@@ -299,11 +328,8 @@ public class FreeRdpConfiguration : IValidatableObject
     /// </summary>
     public string TempPath { get; set; } = "%temp%";
 
-    /// <summary>
-    /// AdditionalArgs: Specify one or more additional arguments when wfreerdp.exe is called
-    /// </summary>
-    public string? AdditionalArgs { get; set; }
-
+    #endregion
+    
     /// <inheritdoc cref="IValidatableObject"/>
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -316,7 +342,8 @@ public class FreeRdpConfiguration : IValidatableObject
     {
         var errors = new List<ValidationResult>();
         Validator.TryValidateObject(this, new ValidationContext(this), errors, true);
-        Validator.TryValidateObject(ProxyConfiguration, new ValidationContext(ProxyConfiguration), errors, true);
+        Validator.TryValidateObject(Proxy, new ValidationContext(Proxy), errors, true);
+        Validator.TryValidateObject(Gateway, new ValidationContext(Gateway), errors, true);
             
         if (errors.Any())
             throw new ArgumentException(
@@ -346,22 +373,22 @@ public class FreeRdpConfiguration : IValidatableObject
                             if (descriptionAttribute == null)
                             {
                                 // use int
-                                yield return string.Format(commandArgumentAttribute.ArgumentFormat, (int) propertyValue);
+                                yield return string.Format(commandArgumentAttribute.ArgumentFormat, (int) propertyValue).Trim();
                             }
                             else
                             {
                                 // use description
-                                yield return string.Format(commandArgumentAttribute.ArgumentFormat, descriptionAttribute.Description);
+                                yield return string.Format(commandArgumentAttribute.ArgumentFormat, descriptionAttribute.Description).Trim();
                             }
                         }
                         else if (property.PropertyType == typeof(bool))
                         {
                             if ((bool) propertyValue)
-                                yield return commandArgumentAttribute.ArgumentFormat;
+                                yield return commandArgumentAttribute.ArgumentFormat.Trim();
                         }
                         else
                         {
-                            yield return string.Format(commandArgumentAttribute.ArgumentFormat, propertyValue);
+                            yield return string.Format(commandArgumentAttribute.ArgumentFormat, propertyValue).Trim();
                         }
                     }
                         break;
@@ -371,14 +398,14 @@ public class FreeRdpConfiguration : IValidatableObject
                         if (propertyValue == null || propertyValue.Equals(defaultValue))
                             continue;
 
-                        yield return ((bool)propertyValue ? "+" : "-") + commandToggleArgumentAttribute.ToggleText;
+                        yield return ((bool)propertyValue ? "+" : "-") + commandToggleArgumentAttribute.ToggleText.Trim();
                     }
                         break;
                 }
             }
         }
 
-        if (AdditionalArgs != null && !string.IsNullOrWhiteSpace(AdditionalArgs))
-            yield return AdditionalArgs;
+        if (AdditionalArguments != null && !string.IsNullOrWhiteSpace(AdditionalArguments))
+            yield return AdditionalArguments.Trim();
     }
 }

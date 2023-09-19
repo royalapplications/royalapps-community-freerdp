@@ -5,7 +5,7 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
 /// <summary>
 /// GDI rendering mode.
 /// </summary>
-public enum GdiRendering
+public enum GDIRendering
 {
     /// <summary>
     /// No rendering mode is specified. The default value of wfreerdp.exe is used.

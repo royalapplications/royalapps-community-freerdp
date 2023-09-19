@@ -12,9 +12,9 @@ public enum ProxyMode
     /// <summary>
     /// Use HTTP proxy
     /// </summary>
-    Http,
+    HTTP,
     /// <summary>
     /// Use SOCKS5 proxy
     /// </summary>
-    Socks5
+    SOCKS5
 }

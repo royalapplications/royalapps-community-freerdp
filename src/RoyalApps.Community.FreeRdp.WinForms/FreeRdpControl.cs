@@ -4,13 +4,11 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Windows.Win32;
 using RoyalApps.Community.FreeRdp.WinForms.Configuration;
 using RoyalApps.Community.FreeRdp.WinForms.Extensions;
-
-// ReSharper disable CommentTypo
-// ReSharper disable IdentifierTypo
 
 namespace RoyalApps.Community.FreeRdp.WinForms;
 
@@ -97,10 +95,7 @@ public class FreeRdpControl : UserControl
         base.Dispose(disposing);
     }
 
-    /// <summary>
-    /// Handle some WndProc messages 
-    /// </summary>
-    /// <param name="m"></param>
+    /// <inheritdoc cref="WndProc"/>
     protected override void WndProc(ref Message m)
     {
         switch ((uint)m.Msg)
@@ -194,7 +189,7 @@ public class FreeRdpControl : UserControl
             VerifyExecutable(freeRdpPath);
         }
 
-        var arguments = Configuration.GetArguments();
+        var arguments = Configuration.GetArguments().Where(a => a.Any());
         _process = new Process
         {
             EnableRaisingEvents = true,
@@ -202,7 +197,7 @@ public class FreeRdpControl : UserControl
             {
                 UseShellExecute = false,
                 FileName = freeRdpPath,
-                Arguments = string.Join(" ", arguments)
+                Arguments = string.Join(" ", arguments).Trim()
             }
         };
         _process.Exited += Process_Exited;
@@ -311,13 +306,13 @@ public class FreeRdpControl : UserControl
         _process = null;
 
         // invalid cert
-        if (exitCode == 131080 && !Configuration.IgnoreCertificate)
+        if (exitCode == 131080 && !Configuration.Certificate.Ignore)
         {
             var args = new CertificateErrorEventArgs();
             OnCertificateError(args);
             if (args.ShouldContinue)
             {
-                Configuration.IgnoreCertificate = true;
+                Configuration.Certificate.Ignore = true;
                 Invoke(Reconnect);
                 return;
             }
@@ -329,7 +324,7 @@ public class FreeRdpControl : UserControl
             OnVerifyCredentials(args);
             if (args.CredentialsApplied)
             {
-                Configuration.UserName = args.Username;
+                Configuration.Username = args.Username;
                 Configuration.Domain = args.Domain;
                 Configuration.Password = args.Password;
                 Invoke(Reconnect);
