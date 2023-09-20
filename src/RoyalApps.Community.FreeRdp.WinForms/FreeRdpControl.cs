@@ -7,8 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Windows.Win32;
+using Microsoft.Extensions.Logging;
 using RoyalApps.Community.FreeRdp.WinForms.Configuration;
 using RoyalApps.Community.FreeRdp.WinForms.Extensions;
+using RoyalApps.Community.FreeRdp.WinForms.Logging;
 
 namespace RoyalApps.Community.FreeRdp.WinForms;
 
@@ -40,6 +42,11 @@ public class FreeRdpControl : UserControl
     /// </summary>
     [Category("FreeRDP Settings"), Description("FreeRDP configuration settings.")]
     public FreeRdpConfiguration Configuration { get; set; } = new();
+
+    /// <summary>
+    /// Logger instance
+    /// </summary>
+    public ILogger Logger { get; set; } = DebugLoggerFactory.Create();
 
     /// <summary>
     /// Raised when wfreerdp.exe has been started.
@@ -197,9 +204,13 @@ public class FreeRdpControl : UserControl
             {
                 UseShellExecute = false,
                 FileName = freeRdpPath,
-                Arguments = string.Join(" ", arguments).Trim()
+                Arguments = string.Join(" ", arguments).Trim(),
+                WorkingDirectory = Environment.ExpandEnvironmentVariables(Configuration.TempPath)
             }
         };
+
+        Logger.LogTrace("Starting wfreerdp.exe {Arguments}", _process.StartInfo.Arguments);
+        
         _process.Exited += Process_Exited;
         _process.Start();
 
@@ -404,12 +415,26 @@ public class FreeRdpControl : UserControl
         Configuration.DesktopWidth = _initialDesktopWidth;
         Configuration.DesktopHeight = _initialDesktopHeight;
 
-        if (_process is null || _process.HasExited)
+        if (_process == null)
             return;
+        
+        try
+        {
+            _process.Exited -= Process_Exited;
 
-        _process.Exited -= Process_Exited;
-        _process.Kill();
-        _process = null;
+            if (_process.HasExited)
+                return;
+
+            _process.Kill();
+        }
+        catch (Exception e)
+        {
+            Logger.LogWarning(e, "Killing wfreerdp.exe failed");
+        }
+        finally
+        {
+            _process = null;
+        }
     }
 
     private void OnConnected()
