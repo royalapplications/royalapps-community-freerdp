@@ -45,8 +45,8 @@ public class CacheConfiguration : IValidatableObject
             return string.Empty;
         
         var builder = new StringBuilder($"/cache:");
-        builder.Append($"bitmap:{(Bitmap ? "on" : "off")}");
-        builder.Append($"glyph:{(Glyph ? "on" : "off")}");
+        builder.Append($"bitmap:{(Bitmap ? "on" : "off")},");
+        builder.Append($"glyph:{(Glyph ? "on" : "off")},");
         builder.Append($"offscreen:{(Offscreen ? "on" : "off")}");
 
         if (!string.IsNullOrEmpty(AdditionalArguments))
