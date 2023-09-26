@@ -76,7 +76,7 @@ public class GatewayConfiguration : IValidatableObject
             builder.Append($",d:{Domain}");
 
         if (!string.IsNullOrEmpty(Password))
-            builder.Append($",p:\"{Password}\"");
+            builder.Append($"\",p:{Password}\"");
 
         if (!string.IsNullOrEmpty(AdditionalArguments))
             builder.Append($",{AdditionalArguments}");
