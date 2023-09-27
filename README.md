@@ -98,4 +98,4 @@ If `DesktopWidth` and `DesktopHeight` properties are set to `0` (default), the r
 If `SmartReconnect` is set to `true` and the container size has changed, the connection will automatically be closed and re-opened to adapt to the new desktop size.
 
 ## Acknowledgements
-Special thanks to [Marc-André Moreau](https://github.com/awakecoding) and [akallabeth](https://github.com/akallabeth) for all the help.
+Special thanks to [Marc-André Moreau](https://github.com/awakecoding) and [akallabeth](https://github.com/akallabeth) for all the help
