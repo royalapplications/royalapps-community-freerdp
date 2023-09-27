@@ -8,7 +8,7 @@
 RoyalApps.Community.FreeRDP contains projects/packages to easily embed/use [FreeRDP](https://github.com/FreeRDP/FreeRDP) in a Windows (WinForms) application.
 ![Screenshot](https://raw.githubusercontent.com/royalapplications/royalapps-community-freerdp/main/docs/assets/Screenshot.png)
 
-The FreeRDP control starts the executable [`wfreerdp.exe`](https://github.com/FreeRDP/FreeRDP) and passes on the correct `parent-window` handle in order to render the remote desktop session in an embeddable WinForms control. The executable is shipped with the control (as embedded resource) and will be "extracted" to a configurable path (default is %temp%) before it is executed.
+The FreeRDP control starts the executable [`wfreerdp.exe`](https://github.com/FreeRDP/FreeRDP) and passes on the correct `parent-window` handle in order to render the remote desktop session in an embeddable WinForms control. The executable is shipped with the control (as embedded resource) and will be "extracted" to a configurable path (default is %temp%) before it is executed. 
 
 ## Getting Started
 ### Installation
