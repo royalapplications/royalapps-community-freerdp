@@ -21,7 +21,6 @@
 
     <PropertyGroup>
         <TargetFrameworks>net472;net6.0-windows;net7.0-windows</TargetFrameworks>
-        <RuntimeIdentifier>win</RuntimeIdentifier>
         <RuntimeIdentifier Condition="$(Platform) == 'x64'">win10-x64</RuntimeIdentifier>
         <RuntimeIdentifier Condition="$(Platform) == 'ARM64'">win10-arm64</RuntimeIdentifier>
         <UseWindowsForms>true</UseWindowsForms>
