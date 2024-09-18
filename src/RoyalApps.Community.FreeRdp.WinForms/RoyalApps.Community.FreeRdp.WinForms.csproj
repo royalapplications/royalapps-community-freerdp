@@ -16,7 +16,7 @@
         <LangVersion>10</LangVersion>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>$(NoWarn);CS8981;NU1701;WFO1000</NoWarn>
+        <NoWarn>$(NoWarn);CS8981;NU1701</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup>
