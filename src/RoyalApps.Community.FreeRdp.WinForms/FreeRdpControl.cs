@@ -41,11 +41,13 @@ public class FreeRdpControl : UserControl
     /// FreeRDP configuration settings 
     /// </summary>
     [Category("FreeRDP Settings"), Description("FreeRDP configuration settings.")]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public FreeRdpConfiguration Configuration { get; set; } = new();
 
     /// <summary>
     /// Logger instance
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public ILogger Logger { get; set; } = DebugLoggerFactory.Create();
 
     /// <summary>
