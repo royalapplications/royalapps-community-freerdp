@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 

@@ -1,4 +1,4 @@
-﻿namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
+namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
 
 /// <summary>
 /// The color depth (in bits per pixel) for the control's connection.

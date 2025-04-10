@@ -1,4 +1,4 @@
-﻿namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
+namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
 
 /// <summary>
 /// The proxy mode for the FreeRdp connection
