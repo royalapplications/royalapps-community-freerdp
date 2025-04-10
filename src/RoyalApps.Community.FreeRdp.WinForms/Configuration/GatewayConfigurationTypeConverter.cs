@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 
 namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;

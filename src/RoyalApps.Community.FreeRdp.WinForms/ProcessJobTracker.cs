@@ -1,4 +1,4 @@
-﻿// ReSharper disable CommentTypo
+// ReSharper disable CommentTypo
 
 // Copyright (c) Andrew Arnott. All rights reserved.
 // Licensed under the MIT license.

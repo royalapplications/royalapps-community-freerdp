@@ -1,4 +1,4 @@
-﻿namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
+namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
 
 /// <summary>
 /// Sets and retrieves the audio redirection mode and different audio redirection options.

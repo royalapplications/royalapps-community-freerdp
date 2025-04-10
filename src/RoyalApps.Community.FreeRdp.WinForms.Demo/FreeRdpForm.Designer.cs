@@ -1,4 +1,4 @@
-﻿namespace RoyalApps.Community.FreeRdp.WinForms.Demo
+namespace RoyalApps.Community.FreeRdp.WinForms.Demo
 {
     partial class FreeRdpForm
     {
