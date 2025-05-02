@@ -47,7 +47,7 @@ public class SecurityConfiguration : IValidatableObject
     {
         if (!RDP && !TLS && !NLA && !Ext && !AAD)
             return string.Empty;
-        
+
         var builder = new StringBuilder("/sec:");
 
         if (RDP)
@@ -64,3 +64,4 @@ public class SecurityConfiguration : IValidatableObject
         return builder.ToString().TrimEnd(',');
     }
  }
+

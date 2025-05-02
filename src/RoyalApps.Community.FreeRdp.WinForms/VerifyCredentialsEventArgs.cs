@@ -11,7 +11,7 @@ public class VerifyCredentialsEventArgs : EventArgs
     internal string? Username { get; private set; }
     internal string? Domain { get; private set; }
     internal string? Password { get; private set; }
-    
+
     /// <summary>
     /// Set a username, domain and a password and try the connection again
     /// </summary>

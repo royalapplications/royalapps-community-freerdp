@@ -31,14 +31,14 @@ public class FreeRdpControl : UserControl
     private Size _previousClientSize = Size.Empty;
     private Process? _process;
     private IntPtr _freeRdpWindowHandle = IntPtr.Zero;
-    
+
     private int _initialZoomFactor = 100;
     private int _currentZoomFactor = 100;
     private int _initialDesktopWidth = -1;
     private int _initialDesktopHeight = -1;
 
     /// <summary>
-    /// FreeRDP configuration settings 
+    /// FreeRDP configuration settings
     /// </summary>
     [Category("FreeRDP Settings"), Description("FreeRDP configuration settings.")]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -115,7 +115,7 @@ public class FreeRdpControl : UserControl
                     _renderTarget.Focus();
                     SetFocusToFreeRdpWindow();
                 }
-                break;                
+                break;
             case PInvoke.WM_SETFOCUS:
                 SetFocusToFreeRdpWindow();
                 break;
@@ -157,7 +157,7 @@ public class FreeRdpControl : UserControl
             return;
 
         _freeRdpWindowHandle = IntPtr.Zero;
-        
+
         ApplyAutoScaling();
 
         if (Configuration.DesktopWidth == 0 || Configuration.DesktopHeight == 0)
@@ -183,7 +183,7 @@ public class FreeRdpControl : UserControl
 
         // AutoScrollMinSize is required to get scrollbars to appear
         AutoScrollMinSize = _renderTarget.Size;
-        
+
         var freeRdpPath = Environment.ExpandEnvironmentVariables(Path.Combine(Configuration.TempPath, WFREERDP_EXE));
         if (!string.IsNullOrWhiteSpace(Configuration.Executable))
         {
@@ -212,7 +212,7 @@ public class FreeRdpControl : UserControl
         };
 
         Logger.LogTrace("Starting wfreerdp.exe {Arguments}", _process.StartInfo.Arguments);
-        
+
         _process.Exited += Process_Exited;
         _process.Start();
 
@@ -421,7 +421,7 @@ public class FreeRdpControl : UserControl
 
         if (_process == null)
             return;
-        
+
         try
         {
             _process.Exited -= Process_Exited;
@@ -462,7 +462,7 @@ public class FreeRdpControl : UserControl
         {
             if (IsDisposed)
                 return;
-            
+
             Invoke(OnDisconnected, disconnectEventArgs);
             return;
         }
@@ -506,7 +506,7 @@ public class FreeRdpControl : UserControl
         KillProcess();
         Connect();
     }
-    
+
     private void SetFocusToFreeRdpWindow()
     {
         if (_freeRdpWindowHandle == IntPtr.Zero)

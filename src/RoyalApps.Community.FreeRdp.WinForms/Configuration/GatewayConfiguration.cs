@@ -12,10 +12,10 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
 public class GatewayConfiguration : IValidatableObject
 {
     /// <summary>
-    /// Hostname of the gateway, If this property is null (or empty), all gateway settings are ignored 
+    /// Hostname of the gateway, If this property is null (or empty), all gateway settings are ignored
     /// </summary>
     public string? Hostname { get; set; }
-    
+
     /// <summary>
     /// Port number the gateway listens to
     /// </summary>
@@ -41,13 +41,13 @@ public class GatewayConfiguration : IValidatableObject
     /// Example: usage-method:[direct|detect],access-token:token,type:[rpc|http[,no-websockets][,extauth-sspi-ntlm]|auto[,no-websockets][,extauth-sspi-ntlm]]|arm,url:wss://url,bearer:oauth2-bearer-token
     /// </summary>
     public string? AdditionalArguments { get; set; }
-    
+
     /// <inheritdoc cref="IValidatableObject"/>
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (string.IsNullOrEmpty(Hostname)) 
+        if (string.IsNullOrEmpty(Hostname))
             yield break;
-        
+
         if (Port is < 1 or > 65535)
             yield return new ValidationResult("The proxy port number is invalid",
                 new[] {nameof(Port)});
@@ -60,7 +60,7 @@ public class GatewayConfiguration : IValidatableObject
 
         if (string.IsNullOrEmpty(Hostname))
             return string.Empty;
-        
+
         var builder = new StringBuilder($"/gateway:g:{Hostname}");
 
         if (Port is not null)
@@ -84,3 +84,4 @@ public class GatewayConfiguration : IValidatableObject
         return builder.ToString();
     }
  }
+

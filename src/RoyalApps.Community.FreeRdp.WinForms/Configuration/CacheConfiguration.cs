@@ -12,10 +12,10 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Configuration;
 public class CacheConfiguration : IValidatableObject
 {
     /// <summary>
-    /// Bitmap caching 
+    /// Bitmap caching
     /// </summary>
     public bool Bitmap { get; set; }
-    
+
     /// <summary>
     /// Glyph caching
     /// </summary>
@@ -31,7 +31,7 @@ public class CacheConfiguration : IValidatableObject
     /// Example: codec[:rfx|nsc],persist,persist-file:filename]
     /// </summary>
     public string? AdditionalArguments { get; set; }
-    
+
     /// <inheritdoc cref="IValidatableObject"/>
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -43,7 +43,7 @@ public class CacheConfiguration : IValidatableObject
     {
         if (string.IsNullOrEmpty(AdditionalArguments) && !Bitmap && !Glyph && !Offscreen)
             return string.Empty;
-        
+
         var builder = new StringBuilder($"/cache:");
         builder.Append($"bitmap:{(Bitmap ? "on" : "off")},");
         builder.Append($"glyph:{(Glyph ? "on" : "off")},");
@@ -54,4 +54,4 @@ public class CacheConfiguration : IValidatableObject
 
         return builder.ToString();
     }
- }
+}

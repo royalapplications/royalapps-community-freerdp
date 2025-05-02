@@ -24,11 +24,10 @@ internal class GatewayConfigurationTypeConverter : TypeConverter
     {
         if (destinationType == null)
             return false;
-        
+
         if (destinationType == typeof(string))
             return true;
 
         return base.CanConvertTo(context, destinationType);
     }
-    
 }

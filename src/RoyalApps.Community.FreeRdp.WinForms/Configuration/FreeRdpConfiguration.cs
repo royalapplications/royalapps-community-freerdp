@@ -100,13 +100,13 @@ public class FreeRdpConfiguration : IValidatableObject
     public CertificateConfiguration Certificate { get; set; } = new();
 
     /// <summary>
-    /// RedirectClipboard (default on): -clipboard 
+    /// RedirectClipboard (default on): -clipboard
     /// </summary>
     [CommandLineToggleArgument("clipboard", true)]
     public bool Clipboard { get; set; } = true;
 
     /// <summary>
-    /// Compression (default on): -compression  
+    /// Compression (default on): -compression
     /// </summary>
     [CommandLineToggleArgument("compression", true)]
     public bool Compression { get; set; } = true;
@@ -305,7 +305,7 @@ public class FreeRdpConfiguration : IValidatableObject
     #region --- Control Settings ---
 
     /// <summary>
-    /// AutoScaling: When enabled, the initial scale factor is determined based on DPI settings 
+    /// AutoScaling: When enabled, the initial scale factor is determined based on DPI settings
     /// </summary>
     public bool AutoScaling { get; set; } = true;
 
@@ -315,21 +315,21 @@ public class FreeRdpConfiguration : IValidatableObject
     public bool SmartReconnect { get; set; }
 
     #endregion
-    
+
     #region --- Executable ---
 
     /// <summary>
     /// The full path to an alternative wfreerdp.exe
     /// </summary>
     public string? Executable { get; set; }
-    
+
     /// <summary>
     /// TempPath: The directory where wfreerdp.exe is written to if not already available
     /// </summary>
     public string TempPath { get; set; } = "%temp%";
 
     #endregion
-    
+
     /// <inheritdoc cref="IValidatableObject"/>
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -344,13 +344,13 @@ public class FreeRdpConfiguration : IValidatableObject
         Validator.TryValidateObject(this, new ValidationContext(this), errors, true);
         Validator.TryValidateObject(Proxy, new ValidationContext(Proxy), errors, true);
         Validator.TryValidateObject(Gateway, new ValidationContext(Gateway), errors, true);
-            
+
         if (errors.Any())
             throw new ArgumentException(
                 $"One or more errors occurred:{Environment.NewLine}{string.Join(Environment.NewLine, errors.Select(e => e.ErrorMessage))}");
 
         var properties = GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
-            
+
         foreach (var property in properties)
         {
             var attributes = property.GetCustomAttributes();
