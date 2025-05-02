@@ -15,7 +15,7 @@ public class CertificateConfiguration : IValidatableObject
     /// Automatically abort connection if the certificate does not match, no user interaction.
     /// </summary>
     public bool Deny { get; set; }
-    
+
     /// <summary>
     /// Ignore the certificate checks altogether (overrules all other options).
     /// </summary>
@@ -41,7 +41,7 @@ public class CertificateConfiguration : IValidatableObject
     /// Example: codec[:rfx|nsc],persist,persist-file:filename]
     /// </summary>
     public string? AdditionalArguments { get; set; }
-    
+
     /// <inheritdoc cref="IValidatableObject"/>
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -54,7 +54,7 @@ public class CertificateConfiguration : IValidatableObject
     {
         if (string.IsNullOrEmpty(AdditionalArguments) && !Deny && !Ignore && !Name && !TOFU)
             return string.Empty;
-        
+
         var builder = new StringBuilder("/cert:");
         if (Deny)
             builder.Append("deny,");
@@ -71,3 +71,4 @@ public class CertificateConfiguration : IValidatableObject
         return builder.ToString().TrimEnd(',');
     }
  }
+

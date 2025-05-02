@@ -10,7 +10,7 @@ internal static class WindowHelper
 {
     [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
-    
+
     public static IntPtr GetFreeRdpWindow(IntPtr parentWindowHandle)
     {
         var returnHandle = IntPtr.Zero;
@@ -21,10 +21,10 @@ internal static class WindowHelper
             GetClassName(hWnd, sb, 7);
             return !sb.ToString().Equals("FREERDP", StringComparison.CurrentCultureIgnoreCase);
         }, new LPARAM());
-        
+
         return returnHandle;
     }
-    
+
     public static void SendFocusMessage(IntPtr hWnd)
     {
         if (hWnd == IntPtr.Zero)

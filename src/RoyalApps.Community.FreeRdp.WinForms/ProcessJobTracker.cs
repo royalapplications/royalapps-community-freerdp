@@ -56,9 +56,9 @@ internal class ProcessJobTracker : IDisposable
         };
 
         if (!SetInformationJobObject(
-                _jobHandle, 
-                JOBOBJECTINFOCLASS.JobObjectExtendedLimitInformation, 
-                &extendedInfo, 
+                _jobHandle,
+                JOBOBJECTINFOCLASS.JobObjectExtendedLimitInformation,
+                &extendedInfo,
                 (uint)sizeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION)))
         {
             throw new Win32Exception();

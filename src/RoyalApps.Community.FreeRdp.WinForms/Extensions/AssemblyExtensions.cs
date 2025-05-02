@@ -34,7 +34,7 @@ internal static class AssemblyExtensions
                 .FirstOrDefault(n => n.ToLowerInvariant()
                     .EndsWith(resourceName.ToLowerInvariant()));
         }
-            
+
         return string.IsNullOrEmpty(name) ? null : assembly.GetManifestResourceStream(name);
     }
 }

@@ -45,9 +45,9 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Demo
             this.ZoomOutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // FreeRdpControl
-            // 
+            //
             this.FreeRdpControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FreeRdpControl.Location = new System.Drawing.Point(0, 40);
             this.FreeRdpControl.Name = "FreeRdpControl";
@@ -56,10 +56,10 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Demo
             this.FreeRdpControl.Connected += FreeRdpControl_Connected;
             this.FreeRdpControl.Disconnected += FreeRdpControl_Disconnected;
             this.FreeRdpControl.CertificateError += FreeRdpControl_CertificateError;
-            this.FreeRdpControl.VerifyCredentials += FreeRdpControl_VerifyCredentials; 
+            this.FreeRdpControl.VerifyCredentials += FreeRdpControl_VerifyCredentials;
             //
             // MenuStrip
-            // 
+            //
             this.MenuStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileMenuItem,
@@ -69,24 +69,24 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Demo
             this.MenuStrip.Size = new System.Drawing.Size(2514, 42);
             this.MenuStrip.TabIndex = 0;
             this.MenuStrip.Text = "menuStrip1";
-            // 
+            //
             // FileMenuItem
-            // 
+            //
             this.FileMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitMenuItem});
             this.FileMenuItem.Name = "FileMenuItem";
             this.FileMenuItem.Size = new System.Drawing.Size(71, 38);
             this.FileMenuItem.Text = "&File";
-            // 
+            //
             // ExitMenuItem
-            // 
+            //
             this.ExitMenuItem.Name = "ExitMenuItem";
             this.ExitMenuItem.Size = new System.Drawing.Size(359, 44);
             this.ExitMenuItem.Text = "E&xit";
             this.ExitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
-            // 
+            //
             // ConnectionMenuItem
-            // 
+            //
             this.ConnectionMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ConnectMenuItem,
             this.DisconnectMenuItem,
@@ -101,29 +101,29 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Demo
             this.ConnectionMenuItem.Name = "ConnectionMenuItem";
             this.ConnectionMenuItem.Size = new System.Drawing.Size(157, 38);
             this.ConnectionMenuItem.Text = "&Connection";
-            // 
+            //
             // ConnectMenuItem
-            // 
+            //
             this.ConnectMenuItem.Name = "ConnectMenuItem";
             this.ConnectMenuItem.Size = new System.Drawing.Size(359, 44);
             this.ConnectMenuItem.Text = "C&onnect";
             this.ConnectMenuItem.Click += new System.EventHandler(this.ConnectMenuItem_Click);
-            // 
+            //
             // DisconnectMenuItem
-            // 
+            //
             this.DisconnectMenuItem.Enabled = false;
             this.DisconnectMenuItem.Name = "DisconnectMenuItem";
             this.DisconnectMenuItem.Size = new System.Drawing.Size(359, 44);
             this.DisconnectMenuItem.Text = "&Disconnect";
             this.DisconnectMenuItem.Click += new System.EventHandler(this.DisconnectMenuItem_Click);
-            // 
+            //
             // Separator1
-            // 
+            //
             this.Separator1.Name = "Separator1";
             this.Separator1.Size = new System.Drawing.Size(356, 6);
-            // 
+            //
             // SettingsMenuItem
-            // 
+            //
             this.SettingsMenuItem.Name = "SettingsMenuItem";
             this.SettingsMenuItem.Size = new System.Drawing.Size(359, 44);
             this.SettingsMenuItem.Text = "&Settings...";
@@ -135,35 +135,35 @@ namespace RoyalApps.Community.FreeRdp.WinForms.Demo
             this.UseCredManMenuItem.Size = new System.Drawing.Size(359, 44);
             this.UseCredManMenuItem.Text = "&Use Credential Manager";
             this.UseCredManMenuItem.Click += new System.EventHandler(this.UseCredManMenuItem_Click);
-            // 
+            //
             // toolStripSeparator1
-            // 
+            //
             this.Separator2.Name = "Separator2";
             this.Separator2.Size = new System.Drawing.Size(356, 6);
-            // 
+            //
             // ResetZoomMenuItem
-            // 
+            //
             this.ResetZoomMenuItem.Name = "ResetZoomMenuItem";
             this.ResetZoomMenuItem.Size = new System.Drawing.Size(359, 44);
             this.ResetZoomMenuItem.Text = "&Reset Zoom";
             this.ResetZoomMenuItem.Click += new System.EventHandler(this.ResetZoomMenuItem_Click);
-            // 
+            //
             // ZoomInMenuItem
-            // 
+            //
             this.ZoomInMenuItem.Name = "ZoomInMenuItem";
             this.ZoomInMenuItem.Size = new System.Drawing.Size(359, 44);
             this.ZoomInMenuItem.Text = "Zoom &In";
             this.ZoomInMenuItem.Click += new System.EventHandler(this.ZoomInMenuItem_Click);
-            // 
+            //
             // ZoomOutMenuItem
-            // 
+            //
             this.ZoomOutMenuItem.Name = "ZoomOutMenuItem";
             this.ZoomOutMenuItem.Size = new System.Drawing.Size(359, 44);
             this.ZoomOutMenuItem.Text = "Zoom O&ut";
             this.ZoomOutMenuItem.Click += new System.EventHandler(this.ZoomOutMenuItem_Click);
-            // 
+            //
             // FreeRdpForm
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(2514, 1529);

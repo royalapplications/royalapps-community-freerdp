@@ -21,7 +21,7 @@ public class DisconnectEventArgs : EventArgs
     /// The error message from exit code.
     /// </summary>
     public string ErrorMessage { get; }
-    
+
     /// <summary>
     /// Creates a new event arg instance.
     /// </summary>
@@ -31,8 +31,8 @@ public class DisconnectEventArgs : EventArgs
         ExitCode = exitCode;
         var error = RdpErrorInfo.ErrorInfoFromErrorCode(exitCode);
         UserInitiated = RdpErrorInfo.IsUserTriggeredDisconnectError(exitCode);
-        ErrorMessage = error == null 
-            ? $"Exit code: {exitCode}" 
+        ErrorMessage = error == null
+            ? $"Exit code: {exitCode}"
             : error.ToString();
     }
 }

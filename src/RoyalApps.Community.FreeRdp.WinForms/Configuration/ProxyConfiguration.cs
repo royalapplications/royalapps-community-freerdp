@@ -55,11 +55,11 @@ public class ProxyConfiguration : IValidatableObject
     {
         if (ProxyMode == ProxyMode.None)
             return string.Empty;
-        
+
         var builder = new StringBuilder("/proxy:");
         builder.Append(
-            ProxyMode == ProxyMode.SOCKS5 
-                ? "socks5://" 
+            ProxyMode == ProxyMode.SOCKS5
+                ? "socks5://"
                 : "http://");
 
         if (!string.IsNullOrEmpty(ProxyUsername))
@@ -78,7 +78,8 @@ public class ProxyConfiguration : IValidatableObject
         builder.Append(ProxyHost);
         builder.Append(":");
         builder.Append(ProxyPort);
-        
+
         return builder.ToString();
     }
  }
+

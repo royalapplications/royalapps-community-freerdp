@@ -24,11 +24,10 @@ internal class CacheConfigurationTypeConverter : TypeConverter
     {
         if (destinationType == null)
             return false;
-        
+
         if (destinationType == typeof(string))
             return true;
 
         return base.CanConvertTo(context, destinationType);
     }
-    
 }

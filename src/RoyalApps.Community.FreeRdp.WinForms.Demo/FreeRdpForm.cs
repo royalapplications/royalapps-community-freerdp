@@ -18,11 +18,11 @@ public partial class FreeRdpForm : Form
     private Credential? _credentialGateway;
     private bool _credentialExisted;
     private bool _credentialGatewayExisted;
-    
+
     public FreeRdpForm()
     {
         InitializeComponent();
-        
+
         _form = new Form
         {
             Size = new Size(800, 1000),
@@ -49,7 +49,7 @@ public partial class FreeRdpForm : Form
         _form.Size = new Size(800, 1000);
         _propertyGrid.Parent = _form;
     }
-    
+
     private void ExitMenuItem_Click(object sender, EventArgs e)
     {
         Close();
@@ -72,20 +72,20 @@ public partial class FreeRdpForm : Form
             FreeRdpControl.Configuration.Server = inputDialog.Input;
         }
 
-        if (string.IsNullOrEmpty(FreeRdpControl.Configuration.Username) || 
+        if (string.IsNullOrEmpty(FreeRdpControl.Configuration.Username) ||
             string.IsNullOrEmpty(FreeRdpControl.Configuration.Password))
         {
             var credentials = GetCredentialFromDialog(@"Please enter a username and password");
             FreeRdpControl.Configuration.Username = credentials?.UserName;
-            FreeRdpControl.Configuration.Domain = string.IsNullOrWhiteSpace(credentials?.Domain) 
-                ? null 
+            FreeRdpControl.Configuration.Domain = string.IsNullOrWhiteSpace(credentials?.Domain)
+                ? null
                 : credentials.Domain;
             FreeRdpControl.Configuration.Password = credentials?.Password;
         }
 
         _credential = HandleMainCredentials(FreeRdpControl.Configuration, out _credentialExisted);
         _credentialGateway = HandleGatewayCredentials(FreeRdpControl.Configuration, out _credentialGatewayExisted);
-        
+
         FreeRdpControl.Connect();
     }
 
@@ -142,7 +142,7 @@ public partial class FreeRdpForm : Form
             _credentialGateway?.Delete();
         _credentialGateway?.Dispose();
         _credentialGateway = null;
-        
+
         if (e.UserInitiated)
             return;
         MessageBox.Show(this, e.ErrorMessage, @"RDP Session Terminated", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -151,10 +151,10 @@ public partial class FreeRdpForm : Form
     private void FreeRdpControl_CertificateError(object sender, CertificateErrorEventArgs e)
     {
         if (MessageBox.Show(
-                this, 
-                @"The hostname of the server certificate does not match the provided host name. Do you want to ignore this error and try to connect again?", 
+                this,
+                @"The hostname of the server certificate does not match the provided host name. Do you want to ignore this error and try to connect again?",
                 @"FreeRdp TLS handshake Error",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) 
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             e.Continue();
     }
 
@@ -193,14 +193,14 @@ public partial class FreeRdpForm : Form
     private Credential? HandleMainCredentials(FreeRdpConfiguration configuration, out bool credentialExisted)
     {
         credentialExisted = false;
-        
+
         if (!UseCredManMenuItem.Checked)
             return null;
-        
+
         var credential = new Credential {Target = $"{TargetPrefix}{configuration.Server}"};
         credentialExisted = credential.Load();
-        credential.Username = string.IsNullOrWhiteSpace(configuration.Domain) 
-            ? configuration.Username 
+        credential.Username = string.IsNullOrWhiteSpace(configuration.Domain)
+            ? configuration.Username
             : $"{configuration.Domain}\\{configuration.Username}";
         credential.Password = configuration.Password;
         credential.Save();
@@ -210,11 +210,11 @@ public partial class FreeRdpForm : Form
         configuration.Password = null;
         return credential;
     }
-    
+
     private Credential? HandleGatewayCredentials(FreeRdpConfiguration configuration, out bool credentialExisted)
     {
         credentialExisted = false;
-        
+
         if (!UseCredManMenuItem.Checked)
             return null;
 
@@ -227,8 +227,8 @@ public partial class FreeRdpForm : Form
 
         var credential = new Credential {Target = $"{TargetPrefix}{configuration.Gateway.Hostname}"};
         credentialExisted = credential.Load();
-        credential.Username = string.IsNullOrWhiteSpace(configuration.Gateway.Domain) 
-            ? configuration.Gateway.Username 
+        credential.Username = string.IsNullOrWhiteSpace(configuration.Gateway.Domain)
+            ? configuration.Gateway.Username
             : $"{configuration.Gateway.Domain}\\{configuration.Gateway.Username}";
         credential.Password = configuration.Gateway.Password;
         credential.Save();

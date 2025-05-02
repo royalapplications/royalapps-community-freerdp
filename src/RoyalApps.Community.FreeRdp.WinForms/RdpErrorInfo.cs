@@ -114,8 +114,8 @@ internal class RdpErrorInfo
 
 	internal static RdpErrorInfo? ErrorInfoFromErrorCode(uint errorCode)
 	{
-		return ConnectionErrorInfos.TryGetValue((int)errorCode, out var errInfo) 
-			? errInfo 
+		return ConnectionErrorInfos.TryGetValue((int)errorCode, out var errInfo)
+			? errInfo
 			: null;
 	}
 
@@ -143,28 +143,28 @@ internal class RdpErrorInfo
 	public static bool IsAuthenticationError(uint errorNumber)
 	{
 		return
-			errorNumber is 
-				(int)ConnectErrors.FREERDP_ERROR_AUTHENTICATION_FAILED or 
-				(int)ConnectErrors.FREERDP_ERROR_CONNECT_NO_OR_MISSING_CREDENTIALS or 
-				(int)ConnectErrors.FREERDP_ERROR_CONNECT_LOGON_FAILURE or 
-				(int)ConnectErrors.FREERDP_ERROR_CONNECT_WRONG_PASSWORD or 
+			errorNumber is
+				(int)ConnectErrors.FREERDP_ERROR_AUTHENTICATION_FAILED or
+				(int)ConnectErrors.FREERDP_ERROR_CONNECT_NO_OR_MISSING_CREDENTIALS or
+				(int)ConnectErrors.FREERDP_ERROR_CONNECT_LOGON_FAILURE or
+				(int)ConnectErrors.FREERDP_ERROR_CONNECT_WRONG_PASSWORD or
 				(int)ProtocolIndependentErrors.FREERDP_ERROR_SERVER_INSUFFICIENT_PRIVILEGES;
 	}
 
 	public static bool IsPotentialSecurityNegotiationError(uint errorNumber)
 	{
 		return
-			errorNumber is 
-				(int)ConnectErrors.FREERDP_ERROR_CONNECT_FAILED or 
-				(int)ConnectErrors.FREERDP_ERROR_TLS_CONNECT_FAILED or 
+			errorNumber is
+				(int)ConnectErrors.FREERDP_ERROR_CONNECT_FAILED or
+				(int)ConnectErrors.FREERDP_ERROR_TLS_CONNECT_FAILED or
 				(int)ConnectErrors.FREERDP_ERROR_SECURITY_NEGO_CONNECT_FAILED;
 	}
 
 	public static bool IsUserTriggeredDisconnectError(uint errorNumber)
 	{
 		return
-			errorNumber is 
-				(int)ProtocolIndependentErrors.FREERDP_ERROR_LOGOFF_BY_USER or 
+			errorNumber is
+				(int)ProtocolIndependentErrors.FREERDP_ERROR_LOGOFF_BY_USER or
 				(int)ProtocolIndependentErrors.FREERDP_ERROR_RPC_INITIATED_DISCONNECT_BY_USER;
 	}
 
