@@ -8,6 +8,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using Windows.Win32.Foundation;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32.System.JobObjects;
 using static Windows.Win32.PInvoke;
@@ -56,7 +57,7 @@ internal class ProcessJobTracker : IDisposable
         };
 
         if (!SetInformationJobObject(
-                _jobHandle,
+                new HANDLE(_jobHandle.DangerousGetHandle()),
                 JOBOBJECTINFOCLASS.JobObjectExtendedLimitInformation,
                 &extendedInfo,
                 (uint)sizeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION)))
