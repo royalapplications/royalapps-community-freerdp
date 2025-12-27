@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/Solution Items/">
-    <File Path="..\.gitignore" />
-    <File Path="..\README.md" />
+    <File Path="../LICENSE" />
+    <File Path="../.gitignore" />
+    <File Path="../README.md" />
     <File Path=".editorconfig" />
+    <File Path="Directory.Packages.props" />
   </Folder>
   <Project Path="RoyalApps.Community.FreeRdp.WinForms.Demo\RoyalApps.Community.FreeRdp.WinForms.Demo.csproj" />
   <Project Path="RoyalApps.Community.FreeRDP.WinForms\RoyalApps.Community.FreeRdp.WinForms.csproj" />
