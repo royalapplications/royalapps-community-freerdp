@@ -25,7 +25,6 @@
         <RuntimeIdentifier Condition="'$(Platform)' == 'ARM64'">win-arm64</RuntimeIdentifier>
         <UseWindowsForms>true</UseWindowsForms>
         <IncludeSymbols>true</IncludeSymbols>
-        <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
