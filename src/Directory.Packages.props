@@ -8,7 +8,7 @@
     <WarningsAsErrors>$(WarningsAsErrors);NU1506</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
     <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.269" />
     <PackageVersion Include="Ookii.Dialogs.WinForms" Version="4.0.0" />
     <PackageVersion Include="Simple.CredentialManager" Version="1.0.0" />
