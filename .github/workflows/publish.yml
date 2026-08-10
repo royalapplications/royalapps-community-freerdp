@@ -40,7 +40,13 @@ jobs:
 
     # Build
     - name: build project
-      run: dotnet build -c Release src/RoyalApps.Community.FreeRdp.WinForms/RoyalApps.Community.FreeRdp.WinForms.csproj
+      run: dotnet build -c Release src/RoyalApps.Community.FreeRdp.slnx
+      env:
+        Configuration: ${{ matrix.configuration }}
+
+    # Test
+    - name: test project
+      run: dotnet test --no-build -c Release src/RoyalApps.Community.FreeRdp.WinForms.Tests/RoyalApps.Community.FreeRdp.WinForms.Tests.csproj
       env:
         Configuration: ${{ matrix.configuration }}
 

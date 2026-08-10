@@ -25,12 +25,16 @@ public class FreeRdpControl : UserControl
     private static readonly ProcessJobTracker ProcessJobTracker = new("royalapps_wfreerdp");
 
     private const string WFREERDP_EXE = "wfreerdp.exe";
+    private const int PROCESS_EXIT_TIMEOUT_MILLISECONDS = 2000;
 
+    private readonly object _processSyncRoot = new();
     private readonly Timer _timerResizeInProgress;
     private readonly UserControl _renderTarget;
     private Size _previousClientSize = Size.Empty;
     private Process? _process;
+    private long _processGeneration;
     private IntPtr _freeRdpWindowHandle = IntPtr.Zero;
+    private int _disposeStarted;
 
     private int _initialZoomFactor = 100;
     private int _currentZoomFactor = 100;
@@ -94,11 +98,12 @@ public class FreeRdpControl : UserControl
     /// <param name="disposing">disposing</param>
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
+        if (disposing && System.Threading.Interlocked.Exchange(ref _disposeStarted, 1) == 0)
         {
+            _timerResizeInProgress.Stop();
             _timerResizeInProgress.Tick -= TimerResizeInProgress_Tick;
             _timerResizeInProgress.Dispose();
-            _process?.Dispose();
+            StopProcess();
         }
 
         base.Dispose(disposing);
@@ -107,12 +112,26 @@ public class FreeRdpControl : UserControl
     /// <inheritdoc cref="WndProc"/>
     protected override void WndProc(ref Message m)
     {
-        switch ((uint)m.Msg)
+        var message = (uint)m.Msg;
+        var isFocusMessage = message is PInvoke.WM_MOUSEACTIVATE or PInvoke.WM_SETFOCUS;
+
+        if (isFocusMessage && !CanProcessFocusMessage())
+            return;
+
+        base.WndProc(ref m);
+
+        if (!isFocusMessage || !CanForwardFocus())
+            return;
+
+        switch (message)
         {
             case PInvoke.WM_MOUSEACTIVATE:
                 if (!_renderTarget.Focused)
                 {
                     _renderTarget.Focus();
+                    if (!CanForwardFocus())
+                        return;
+
                     SetFocusToFreeRdpWindow();
                 }
                 break;
@@ -120,7 +139,6 @@ public class FreeRdpControl : UserControl
                 SetFocusToFreeRdpWindow();
                 break;
         }
-        base.WndProc(ref m);
     }
 
     /// <summary>
@@ -143,7 +161,7 @@ public class FreeRdpControl : UserControl
     protected override void OnSizeChanged(EventArgs e)
     {
         base.OnSizeChanged(e);
-        if (!Configuration.SmartReconnect)
+        if (DisposeStarted || Disposing || IsDisposed || !Configuration.SmartReconnect)
             return;
         _timerResizeInProgress.Start();
     }
@@ -153,8 +171,28 @@ public class FreeRdpControl : UserControl
     /// </summary>
     public void Connect()
     {
-        if (_process is {HasExited: false})
-            return;
+        ObjectDisposedException.ThrowIf(DisposeStarted, this);
+
+        Process? previousProcess;
+        long connectGeneration;
+        lock (_processSyncRoot)
+        {
+            if (_process is {HasExited: false})
+                return;
+
+            previousProcess = _process;
+            _process = null;
+            connectGeneration = unchecked(++_processGeneration);
+        }
+
+        if (previousProcess is not null)
+        {
+            previousProcess.Exited -= Process_Exited;
+            previousProcess.Dispose();
+        }
+
+        if (DisposeStarted)
+            throw new ObjectDisposedException(nameof(FreeRdpControl));
 
         _freeRdpWindowHandle = IntPtr.Zero;
 
@@ -199,7 +237,7 @@ public class FreeRdpControl : UserControl
         }
 
         var arguments = Configuration.GetArguments().Where(a => a.Any());
-        _process = new Process
+        var process = new Process
         {
             EnableRaisingEvents = true,
             StartInfo =
@@ -211,14 +249,53 @@ public class FreeRdpControl : UserControl
             }
         };
 
-        Logger.LogTrace("Starting wfreerdp.exe {Arguments}", _process.StartInfo.Arguments);
+        Logger.LogTrace("Starting wfreerdp.exe {Arguments}", process.StartInfo.Arguments);
 
-        _process.Exited += Process_Exited;
-        _process.Start();
+        var processOwned = false;
+        var connectSuperseded = false;
+        process.Exited += Process_Exited;
+        try
+        {
+            lock (_processSyncRoot)
+            {
+                if (DisposeStarted)
+                    throw new ObjectDisposedException(nameof(FreeRdpControl));
 
-        ProcessJobTracker.AddProcess(_process);
+                if (_processGeneration != connectGeneration || _process is not null)
+                {
+                    connectSuperseded = true;
+                }
+                else
+                {
+                    _process = process;
+                    processOwned = true;
+                    process.Start();
+                    ProcessJobTracker.AddProcess(process);
+                }
+            }
+        }
+        catch
+        {
+            if (processOwned)
+            {
+                StopProcess(process);
+            }
+            else
+            {
+                process.Exited -= Process_Exited;
+                process.Dispose();
+            }
+            throw;
+        }
 
-        OnConnected();
+        if (connectSuperseded)
+        {
+            process.Exited -= Process_Exited;
+            process.Dispose();
+            return;
+        }
+
+        OnConnected(connectGeneration);
     }
 
     /// <summary>
@@ -226,7 +303,7 @@ public class FreeRdpControl : UserControl
     /// </summary>
     public void Disconnect()
     {
-        KillProcess();
+        StopProcess();
         OnDisconnected(new DisconnectEventArgs(0) {UserInitiated = true});
     }
 
@@ -303,8 +380,6 @@ public class FreeRdpControl : UserControl
             200 => 175,
             175 => 150,
             150 => 125,
-            125 => 100,
-            100 => 100,
             _ => 100
         };
         SetZoomLevel(newScaleFactor);
@@ -312,23 +387,49 @@ public class FreeRdpControl : UserControl
 
     private void Process_Exited(object? sender, EventArgs e)
     {
-        if (_process is null)
+        if (sender is not Process process)
             return;
 
-        var exitCode = _process.ExitCode;
-        _process.Exited -= Process_Exited;
-        _process.Dispose();
-        _process = null;
+        long processGeneration;
+        lock (_processSyncRoot)
+        {
+            if (!ReferenceEquals(_process, process))
+                return;
+
+            processGeneration = _processGeneration;
+            _process = null;
+        }
+
+        var exitCode = process.ExitCode;
+        process.Exited -= Process_Exited;
+        process.Dispose();
+
+        if (!CanRaiseLifecycleEvent)
+            return;
+
+        InvokeIfLifecycleActive(() => HandleProcessExit(processGeneration, exitCode));
+    }
+
+    private void HandleProcessExit(long processGeneration, int exitCode)
+    {
+        if (!IsProcessGenerationCurrent(processGeneration))
+            return;
+
+        _freeRdpWindowHandle = IntPtr.Zero;
 
         // invalid cert
         if (exitCode == 131080 && !Configuration.Certificate.Ignore)
         {
             var args = new CertificateErrorEventArgs();
             OnCertificateError(args);
+
+            if (!IsProcessGenerationCurrent(processGeneration))
+                return;
+
             if (args.ShouldContinue)
             {
                 Configuration.Certificate.Ignore = true;
-                Invoke(Reconnect);
+                Reconnect(processGeneration);
                 return;
             }
         }
@@ -337,15 +438,22 @@ public class FreeRdpControl : UserControl
         {
             var args = new VerifyCredentialsEventArgs();
             OnVerifyCredentials(args);
+
+            if (!IsProcessGenerationCurrent(processGeneration))
+                return;
+
             if (args.CredentialsApplied)
             {
                 Configuration.Username = args.Username;
                 Configuration.Domain = args.Domain;
                 Configuration.Password = args.Password;
-                Invoke(Reconnect);
+                Reconnect(processGeneration);
                 return;
             }
         }
+
+        if (!IsProcessGenerationCurrent(processGeneration))
+            return;
 
         Configuration.DesktopWidth = _initialDesktopWidth;
         Configuration.DesktopHeight = _initialDesktopHeight;
@@ -354,6 +462,9 @@ public class FreeRdpControl : UserControl
 
     private void TimerResizeInProgress_Tick(object? sender, EventArgs e)
     {
+        if (DisposeStarted || Disposing || IsDisposed)
+            return;
+
         if (MouseButtons == MouseButtons.Left)
             return;
         _timerResizeInProgress.Stop();
@@ -414,22 +525,42 @@ public class FreeRdpControl : UserControl
     private double GetDpiScalingFactor() => DeviceDpi / 96.0;
     private int GetDpiScalingInPercent() => (int) GetDpiScalingFactor() * 100;
 
-    private void KillProcess()
+    private bool StopProcess(Process? expectedProcess = null, long? expectedGeneration = null)
     {
+        Process? process;
+        lock (_processSyncRoot)
+        {
+            if (expectedProcess is not null && !ReferenceEquals(_process, expectedProcess))
+                return false;
+
+            if (expectedGeneration.HasValue && _processGeneration != expectedGeneration.Value)
+                return false;
+
+            process = _process;
+            _process = null;
+            unchecked
+            {
+                _processGeneration++;
+            }
+            if (process is not null)
+                process.Exited -= Process_Exited;
+        }
+
         Configuration.DesktopWidth = _initialDesktopWidth;
         Configuration.DesktopHeight = _initialDesktopHeight;
+        _freeRdpWindowHandle = IntPtr.Zero;
 
-        if (_process == null)
-            return;
+        if (process is null)
+            return true;
 
         try
         {
-            _process.Exited -= Process_Exited;
+            if (process.HasExited)
+                return true;
 
-            if (_process.HasExited)
-                return;
-
-            _process.Kill();
+            process.Kill(entireProcessTree: true);
+            if (!process.WaitForExit(PROCESS_EXIT_TIMEOUT_MILLISECONDS))
+                Logger.LogWarning("wfreerdp.exe did not exit within {Timeout} ms", PROCESS_EXIT_TIMEOUT_MILLISECONDS);
         }
         catch (Exception e)
         {
@@ -437,81 +568,121 @@ public class FreeRdpControl : UserControl
         }
         finally
         {
-            _process = null;
+            process.Dispose();
         }
+
+        return true;
     }
 
-    private void OnConnected()
+    private void OnConnected(long processGeneration)
     {
-        if (InvokeRequired)
+        InvokeIfLifecycleActive(() =>
         {
-            if (IsDisposed)
-                return;
-
-            Invoke(OnConnected);
-            return;
-        }
-
-        var handler = Connected;
-        handler?.Invoke(this, EventArgs.Empty);
+            if (IsProcessGenerationCurrent(processGeneration))
+                Connected?.Invoke(this, EventArgs.Empty);
+        });
     }
 
     private void OnDisconnected(DisconnectEventArgs disconnectEventArgs)
     {
-        if (InvokeRequired)
-        {
-            if (IsDisposed)
-                return;
-
-            Invoke(OnDisconnected, disconnectEventArgs);
-            return;
-        }
-
-        var handler = Disconnected;
-        handler?.Invoke(this, disconnectEventArgs);
+        InvokeIfLifecycleActive(() => Disconnected?.Invoke(this, disconnectEventArgs));
     }
 
     private void OnCertificateError(CertificateErrorEventArgs certificateErrorEventArgs)
     {
-        if (InvokeRequired)
-        {
-            if (IsDisposed)
-                return;
-
-            Invoke(OnCertificateError, certificateErrorEventArgs);
-            return;
-        }
-
-        var handler = CertificateError;
-        handler?.Invoke(this, certificateErrorEventArgs);
+        InvokeIfLifecycleActive(() => CertificateError?.Invoke(this, certificateErrorEventArgs));
     }
 
     private void OnVerifyCredentials(VerifyCredentialsEventArgs verifyCredentialsEventArgs)
     {
-        if (InvokeRequired)
-        {
-            if (IsDisposed)
-                return;
+        InvokeIfLifecycleActive(() => VerifyCredentials?.Invoke(this, verifyCredentialsEventArgs));
+    }
 
-            Invoke(OnVerifyCredentials, verifyCredentialsEventArgs);
+    private void InvokeIfLifecycleActive(Action action)
+    {
+        if (!CanRaiseLifecycleEvent)
+            return;
+
+        if (!InvokeRequired)
+        {
+            if (CanRaiseLifecycleEvent)
+                action();
             return;
         }
 
-        var handler = VerifyCredentials;
-        handler?.Invoke(this, verifyCredentialsEventArgs);
+        if (!IsHandleCreated)
+            return;
+
+        try
+        {
+            Invoke((MethodInvoker)(() =>
+            {
+                if (CanRaiseLifecycleEvent)
+                    action();
+            }));
+        }
+        catch (ObjectDisposedException) when (!CanRaiseLifecycleEvent || !IsHandleCreated)
+        {
+            // Expected when disposal wins the race with a queued process notification.
+        }
+        catch (InvalidOperationException) when (!CanRaiseLifecycleEvent || !IsHandleCreated)
+        {
+            // Expected when the handle is destroyed before the invocation can be dispatched.
+        }
     }
 
     private void Reconnect()
     {
-        KillProcess();
+        StopProcess();
         Connect();
+    }
+
+    private void Reconnect(long expectedGeneration)
+    {
+        if (!StopProcess(expectedGeneration: expectedGeneration))
+            return;
+
+        Connect();
+    }
+
+    private bool IsProcessGenerationCurrent(long processGeneration)
+    {
+        lock (_processSyncRoot)
+        {
+            return _processGeneration == processGeneration;
+        }
     }
 
     private void SetFocusToFreeRdpWindow()
     {
-        if (_freeRdpWindowHandle == IntPtr.Zero)
+        if (!CanForwardFocus())
+            return;
+
+        if (!WindowHelper.IsFreeRdpWindow(_freeRdpWindowHandle))
             _freeRdpWindowHandle = WindowHelper.GetFreeRdpWindow(_renderTarget.Handle);
 
         WindowHelper.SendFocusMessage(_freeRdpWindowHandle);
     }
+
+    private bool DisposeStarted => System.Threading.Volatile.Read(ref _disposeStarted) != 0;
+
+    private bool CanRaiseLifecycleEvent =>
+        !DisposeStarted &&
+        !Disposing &&
+        !IsDisposed;
+
+    private bool CanProcessFocusMessage() =>
+        !DisposeStarted &&
+        !Disposing &&
+        !IsDisposed &&
+        IsHandleCreated;
+
+    private bool CanForwardFocus() =>
+        CanProcessFocusMessage() &&
+        CanUseRenderTarget();
+
+    private bool CanUseRenderTarget() =>
+        !_renderTarget.Disposing &&
+        !_renderTarget.IsDisposed &&
+        _renderTarget.IsHandleCreated;
 }

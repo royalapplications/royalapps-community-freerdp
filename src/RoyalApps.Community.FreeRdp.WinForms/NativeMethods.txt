@@ -4,6 +4,7 @@ SetInformationJobObject
 
 EnumChildWindows
 GetClassName
+IsWindow
 
 SendMessage
 WM_SETFOCUS
