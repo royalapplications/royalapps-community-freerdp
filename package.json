@@ -4,8 +4,10 @@
   "type": "module",
   "engines": { "node": ">=22.18.0" },
   "scripts": {
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
+    "docs:api": "node scripts/generate-api-docs.mjs",
+    "docs:test": "node --test scripts/generate-api-docs.test.mjs",
+    "docs:dev": "npm run docs:api && vitepress dev docs",
+    "docs:build": "npm run docs:api && npm run docs:test && vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
@@ -15,4 +17,3 @@
     "postcss": "8.5.23"
   }
 }
-

@@ -10,7 +10,7 @@ public enum AudioRedirectionMode
     /// </summary>
     NotSpecified = -1,
     /// <summary>
-    /// Audio redirection is enabled and the option for redirection is "Bring to this computer".
+    /// Audio redirection is enabled, and the option for redirection is "Bring to this computer".
     /// </summary>
     Local = 0,
     /// <summary>

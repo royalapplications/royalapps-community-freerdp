@@ -1,5 +1,7 @@
 ﻿import { defineConfig } from "vitepress";
 
+import apiSidebar from "../api/sidebar.mjs";
+
 const repository = "https://github.com/royalapplications/royalapps-community-freerdp";
 const sidebar = [
   {
@@ -15,7 +17,7 @@ const sidebar = [
     ]
   },
   {
-    text: "API",
+    text: "API Overviews",
     items: [
       { text: "Overview", link: "/api/" },
       { text: "FreeRdpControl", link: "/api/control" },
@@ -23,6 +25,7 @@ const sidebar = [
       { text: "Diagnostics Types", link: "/api/diagnostics" }
     ]
   },
+  ...apiSidebar,
   {
     text: "Contributing",
     items: [{ text: "Documentation", link: "/articles/contributing" }]
@@ -55,4 +58,3 @@ export default defineConfig({
     }
   }
 });
-

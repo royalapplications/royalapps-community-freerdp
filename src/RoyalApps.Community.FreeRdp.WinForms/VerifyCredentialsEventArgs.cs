@@ -13,7 +13,7 @@ public class VerifyCredentialsEventArgs : EventArgs
     internal string? Password { get; private set; }
 
     /// <summary>
-    /// Set a username, domain and a password and try the connection again
+    /// Set a username, domain, and a password and try the connection again
     /// </summary>
     public void SetCredentials(string? username, string? domain, string? password)
     {

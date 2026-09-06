@@ -13,12 +13,12 @@ public class DisconnectEventArgs : EventArgs
     public uint ExitCode { get; }
 
     /// <summary>
-    /// Whether or not the disconnected by the user directly.
+    /// Disconnected by the user directly.
     /// </summary>
     public bool UserInitiated { get; set; }
 
     /// <summary>
-    /// The error message from exit code.
+    /// The error message from the exit code.
     /// </summary>
     public string ErrorMessage { get; }
 

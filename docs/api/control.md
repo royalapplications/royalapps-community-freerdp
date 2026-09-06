@@ -2,6 +2,8 @@
 
 Namespace: `RoyalApps.Community.FreeRdp.WinForms`
 
+This page is a usage overview. See the [generated FreeRdpControl reference](/api/reference/royalapps-community-freerdp-winforms-freerdpcontrol) for member-level documentation and linked types.
+
 A WinForms `UserControl` that owns a native FreeRDP child process.
 
 ## Properties
@@ -34,4 +36,3 @@ A WinForms `UserControl` that owns a native FreeRDP child process.
 Read [Lifecycle and Events](/articles/lifecycle) for ordering, retry, and ownership guidance.
 
 [FreeRdpControl source](https://github.com/royalapplications/royalapps-community-freerdp/blob/main/src/RoyalApps.Community.FreeRdp.WinForms/FreeRdpControl.cs).
-

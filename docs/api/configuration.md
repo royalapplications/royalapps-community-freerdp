@@ -2,6 +2,8 @@
 
 Namespace: `RoyalApps.Community.FreeRdp.WinForms.Configuration`
 
+This page is a configuration overview. See the [generated FreeRdpConfiguration reference](/api/reference/royalapps-community-freerdp-winforms-configuration-freerdpconfiguration) and the namespace sidebar for every public configuration type and enum.
+
 ## FreeRdpConfiguration
 
 The main configuration groups are:
@@ -43,4 +45,3 @@ An empty hostname suppresses gateway arguments. Password and additional argument
 - [CacheConfiguration](https://github.com/royalapplications/royalapps-community-freerdp/blob/main/src/RoyalApps.Community.FreeRdp.WinForms/Configuration/CacheConfiguration.cs)
 
 See the [Configuration guide](/articles/configuration) for examples.
-

@@ -15,17 +15,18 @@ The current source targets **.NET 10 on Windows**. Older package releases may ha
 
 ## Documentation
 
-The VitePress documentation lives in [`docs/`](docs/index.md):
+The documentation can be found here:
 
-- [Getting Started](docs/articles/getting-started.md)
-- [Configuration](docs/articles/configuration.md)
-- [Lifecycle and Events](docs/articles/lifecycle.md)
-- [Diagnostics](docs/articles/diagnostics.md)
-- [Troubleshooting](docs/articles/troubleshooting.md)
-- [Support Matrix](docs/articles/support-matrix.md)
-- [API Reference](docs/api/index.md)
+- [Documentation site](https://royalapplications.github.io/royalapps-community-freerdp/)
+- [Getting Started](https://royalapplications.github.io/royalapps-community-freerdp/articles/getting-started)
+- [Configuration](https://royalapplications.github.io/royalapps-community-freerdp/articles/configuration)
+- [Lifecycle and Events](https://royalapplications.github.io/royalapps-community-freerdp/articles/lifecycle)
+- [Diagnostics](https://royalapplications.github.io/royalapps-community-freerdp/articles/diagnostics)
+- [Troubleshooting](https://royalapplications.github.io/royalapps-community-freerdp/articles/troubleshooting)
+- [Support Matrix](https://royalapplications.github.io/royalapps-community-freerdp/articles/support-matrix)
+- [API Reference](https://royalapplications.github.io/royalapps-community-freerdp/api/)
 
-See [documentation development and deployment](docs/articles/contributing.md) to preview the site locally or publish it to GitHub Pages.
+See [documentation development and deployment](https://royalapplications.github.io/royalapps-community-freerdp/articles/contributing) to preview the site locally or publish it to GitHub Pages.
 
 ![FreeRDP demo](https://raw.githubusercontent.com/royalapplications/royalapps-community-freerdp/main/docs/assets/Screenshot.png)
 
@@ -62,7 +63,7 @@ Use `rdp.Disconnect()` to stop the client. The containing form owns and disposes
 
 Set `DiagnosticsOptionsProvider` before connecting and subscribe to `DiagnosticOutput`. The provider is evaluated before every native launch, including internal retries.
 
-Output is **raw and potentially sensitive**. Handlers must be thread-safe and nonblocking. The host owns redaction, bounded buffering, file writing, persistence, and enable/disable policy. See the [diagnostics guide](docs/articles/diagnostics.md) for an integration example and lifecycle details.
+Output is **raw and potentially sensitive**. Handlers must be thread-safe and nonblocking. The host owns redaction, bounded buffering, file writing, persistence, and enable/disable policy. See the [diagnostics guide](https://royalapplications.github.io/royalapps-community-freerdp/articles/diagnostics) for an integration example and lifecycle details.
 
 ## Demo and development
 

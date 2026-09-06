@@ -32,7 +32,7 @@ public class CertificateConfiguration : IValidatableObject
     public string? AlternateName { get; set; }
 
     /// <summary>
-    /// Trust on first use: Accept certificate unconditionally on first connect and deny on subsequent connections if the certificate does not match.
+    /// Trust on first use: Accept a certificate unconditionally on the first connection and deny on further connections if the certificate does not match.
     /// </summary>
     public bool TOFU { get; set; }
 

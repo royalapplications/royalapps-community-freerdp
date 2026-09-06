@@ -39,7 +39,7 @@ internal sealed class FreeRdpProcessDiagnostics
 
     internal static void Configure(ProcessStartInfo info, FreeRdpDiagnosticsOptions options)
     {
-        var level = options.LogLevel?.ToUpperInvariant() switch
+        var level = options.LogLevel.ToUpperInvariant() switch
         {
             "TRACE" => "TRACE", "INFO" => "INFO", "WARN" => "WARN", "ERROR" => "ERROR", _ => "DEBUG"
         };
@@ -116,7 +116,10 @@ internal sealed class FreeRdpProcessDiagnostics
                     Emit("lifecycle", "Timed out draining native diagnostic output.");
                 if (process.HasExited) Emit("lifecycle", $"Client exited; exitCode={process.ExitCode}");
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
             finally
             {
                 _stdout.Dispose();

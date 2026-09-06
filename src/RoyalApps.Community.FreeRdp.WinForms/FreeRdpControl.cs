@@ -258,7 +258,7 @@ public class FreeRdpControl : UserControl
             }
         };
 
-        FreeRdpDiagnosticsOptions? diagnostics = null;
+        FreeRdpDiagnosticsOptions? diagnostics;
         try
         {
             diagnostics = DiagnosticsOptionsProvider?.Invoke();

@@ -4,6 +4,8 @@ Namespace: `RoyalApps.Community.FreeRdp.WinForms`
 
 Introduced in **2.2.4** without changing existing public signatures.
 
+This page explains the diagnostics contract. Member-level documentation is generated for [FreeRdpDiagnosticsOptions](/api/reference/royalapps-community-freerdp-winforms-freerdpdiagnosticsoptions), [FreeRdpDiagnosticEventArgs](/api/reference/royalapps-community-freerdp-winforms-freerdpdiagnosticeventargs), and [FreeRdpControl](/api/reference/royalapps-community-freerdp-winforms-freerdpcontrol).
+
 ## FreeRdpDiagnosticsOptions
 
 ```csharp
@@ -37,4 +39,3 @@ Output is drained concurrently, with individual lines bounded to 65,536 characte
 See [Diagnostics](/articles/diagnostics) for integration, threading, and security requirements.
 
 [Diagnostics source](https://github.com/royalapplications/royalapps-community-freerdp/blob/main/src/RoyalApps.Community.FreeRdp.WinForms/FreeRdpDiagnosticsOptions.cs).
-
