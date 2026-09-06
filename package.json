@@ -1,0 +1,18 @@
+﻿{
+  "name": "royalapps-community-freerdp-docs",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.18.0" },
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "vitepress": "2.0.0-alpha.18"
+  },
+  "overrides": {
+    "postcss": "8.5.23"
+  }
+}
+

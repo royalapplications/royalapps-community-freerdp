@@ -1,0 +1,9 @@
+﻿:root {
+  --vp-sidebar-width: 320px;
+}
+
+.VPHero .image-src {
+  max-width: 220px;
+  max-height: 220px;
+}
+

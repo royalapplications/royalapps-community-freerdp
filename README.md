@@ -1,101 +1,82 @@
-# FreeRDP Control
+﻿# FreeRDP Control
 
 [![NuGet Version](https://img.shields.io/nuget/v/RoyalApps.Community.FreeRdp.WinForms.svg?style=flat)](https://www.nuget.org/packages/RoyalApps.Community.FreeRdp.WinForms)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/RoyalApps.Community.FreeRdp.WinForms.svg?color=green)](https://www.nuget.org/packages/RoyalApps.Community.FreeRdp.WinForms)
-[![.NET Framework](https://img.shields.io/badge/.NET%20Framework-%3E%3D%204.72-512bd4)](https://dotnet.microsoft.com/download)
-[![.NET](https://img.shields.io/badge/.NET-%3E%3D%20%208.0-blueviolet)](https://dotnet.microsoft.com/download)
+[![.NET](https://img.shields.io/badge/.NET-net10.0--windows-blueviolet)](https://dotnet.microsoft.com/download)
 
-RoyalApps.Community.FreeRDP contains projects/packages to easily embed/use [FreeRDP](https://github.com/FreeRDP/FreeRDP) in a Windows (WinForms) application.
-![Screenshot](https://raw.githubusercontent.com/royalapplications/royalapps-community-freerdp/main/docs/assets/Screenshot.png)
+`RoyalApps.Community.FreeRdp.WinForms` embeds [FreeRDP's Windows client](https://github.com/FreeRDP/FreeRDP) in a WinForms application. It launches `wfreerdp.exe` with a parent-window handle; it does not use Microsoft RDP ActiveX or FreeRdpKit.
 
-The FreeRDP control starts the executable [`wfreerdp.exe`](https://github.com/FreeRDP/FreeRDP) and passes on the correct `parent-window` handle in order to render the remote desktop session in an embeddable WinForms control. The executable is shipped with the control (as embedded resource) and will be "extracted" to a configurable path (default is %temp%) before it is executed.
+- Typed destination, gateway, display, certificate, and redirection settings.
+- A bundled client, with support for selecting a compatible custom executable.
+- Connection events, credential/certificate retries, and resize/zoom reconnects.
+- Opt-in native diagnostics with per-launch configuration and stdout/stderr capture, introduced in **2.2.4**.
 
-## Getting Started
-### Installation
-You should install the RoyalApps.Community.FreeRDP.WinForms with NuGet:
+The current source targets **.NET 10 on Windows**. Older package releases may have different framework requirements.
+
+## Documentation
+
+The VitePress documentation lives in [`docs/`](docs/index.md):
+
+- [Getting Started](docs/articles/getting-started.md)
+- [Configuration](docs/articles/configuration.md)
+- [Lifecycle and Events](docs/articles/lifecycle.md)
+- [Diagnostics](docs/articles/diagnostics.md)
+- [Troubleshooting](docs/articles/troubleshooting.md)
+- [Support Matrix](docs/articles/support-matrix.md)
+- [API Reference](docs/api/index.md)
+
+See [documentation development and deployment](docs/articles/contributing.md) to preview the site locally or publish it to GitHub Pages.
+
+![FreeRDP demo](https://raw.githubusercontent.com/royalapplications/royalapps-community-freerdp/main/docs/assets/Screenshot.png)
+
+## Installation
+
+```sh
+dotnet add package RoyalApps.Community.FreeRdp.WinForms
 ```
-Install-Package RoyalApps.Community.FreeRDP.WinForms
-```
-or via the command line interface:
-```
-dotnet add package RoyalApps.Community.FreeRDP.WinForms
-```
 
-### Using the FreeRdpControl
-#### Add Control
-Place the `FreeRdpControl` on a form or in a container control (user control, tab control, etc.) and set the `Dock` property to `DockStyle.Fill`
+For the diagnostics APIs, install version 2.2.4 or later from a feed containing that version.
 
-#### Set Properties
-To configure all RDP relevant settings, use the properties of the `FreeRdpConfiguration` class which is accessible through the `FreeRdpControl.Configuration` property.
+## Quick start
 
-#### Connect and Disconnect
-Once the configuration is set, call:
+On the WinForms UI thread, add the control to a form or container before connecting:
+
 ```csharp
-FreeRdpControl.Connect();
+using System.Windows.Forms;
+using RoyalApps.Community.FreeRdp.WinForms;
+
+// In your form's constructor, after initialization:
+var rdp = new FreeRdpControl { Dock = DockStyle.Fill };
+Controls.Add(rdp);
+rdp.Configuration.Server = "desktop.example.test";
+
+// Obtain credentials through your host application's secure credential flow.
+rdp.Configuration.Username = username;
+rdp.Configuration.Password = password;
+Shown += (_, _) => rdp.Connect();
 ```
-to start a connection.
 
-> **Note**
-> Before you call `Connect();`, make sure you have set the `Server` (hostname or IP address) and the credential properties (`Username` and `Password`). An exception will be thrown if these properties are not set. If you connect to a Windows machine using the IP address, the connection may fail because the subject name of the certificate doesn't match. In this case, set `IgnoreCertificates` to `true`.
+Use `rdp.Disconnect()` to stop the client. The containing form owns and disposes the control. Keep certificate validation enabled; see the guide before implementing certificate exceptions.
 
-To disconnect, simply call:
-```csharp
-FreeRdpControl.Disconnect();
+## Diagnostics
+
+Set `DiagnosticsOptionsProvider` before connecting and subscribe to `DiagnosticOutput`. The provider is evaluated before every native launch, including internal retries.
+
+Output is **raw and potentially sensitive**. Handlers must be thread-safe and nonblocking. The host owns redaction, bounded buffering, file writing, persistence, and enable/disable policy. See the [diagnostics guide](docs/articles/diagnostics.md) for an integration example and lifecycle details.
+
+## Demo and development
+
+Open `src/RoyalApps.Community.FreeRdp.slnx` and run `RoyalApps.Community.FreeRdp.WinForms.Demo`.
+
+```sh
+dotnet build src/RoyalApps.Community.FreeRdp.slnx -c Release
+dotnet test src/RoyalApps.Community.FreeRdp.WinForms.Tests/RoyalApps.Community.FreeRdp.WinForms.Tests.csproj -c Release
+npm ci
+npm run docs:dev
 ```
-#### Zoom
-Before you call `Connect();`, you can set the remote zoom level (DPI) using the following properties:
-`int DesktopScaleFactor` (valid values between 100 and 500)
-`int DeviceScaleFactor` (valid values: 100, 140, 180)
-> **Note**
-> Recommended values are for DeviceScaleFactor
-> 100 for DesktopScaleFactor of 100
-> 140 for DesktopScaleFactor between 100 and 199
-> 180 for DesktopScaleFactor of 200 or more
 
-##### Auto Scaling
-If `FreeRdpConfiguration.AutoScaling` is set to `true`, the initial `DesktopScaleFactor` is determined based on DPI settings.
+## License and acknowledgements
 
-##### Changing Zoom Level
-While connected you can use the following methods to change the remote zoom level:
-`ZoomIn()`, `ZoomOut()`, `ResetZoom()` and `SetZoomLevel(int scalingInPercent)`
+[MIT License](LICENSE). FreeRDP and other bundled dependencies retain their respective licenses.
 
-> **Note**
-> Calling these methods will kill the `wfreerdp.exe` and restart it using the new scaling values.
-
-#### Subscribe to Events
-When the connection has been established, the `Connected` event is raised.
-
-The `Disconnected` event is raised when:
-* the connection couldn't be established (server not reachable, incorrect credentials)
-* the connection has been interrupted (network failure)
-* the connection was closed by the user (logoff or disconnect)
-* the `wfreerdp.exe` died for some reason
-
-The `DisconnectedEventArgs` may have an error code or error message for more information.
-
-The `CertificateError` event is raised when the TLS handshake failed. Calling `e.Continue();` in the event handler will set the `FreeRdpConfiguration.IgnoreCertificate` property to true and retries the connection.
-
-The `VerifyCredentials` event is raised when an authentication error occurs and the login fails. Calling `e.SetCredentials(string? username, string? domain, string? password);` in the event handler will set the credential properties in the `FreeRdpConfiguration` class and retries the connection with the provided credentials.
-
-## Exploring the Demo Application
-The demo application is quite simple. The `Connection` menu has the following items:
-### Connect
-Starts the remote desktop connection.
-If you click `Connect` the first time, you get a prompt for the server name to connect to and the a prompt for the credentials. If you want to change the server or the credentials, use the `Settings` window.
-
-### Disconnect
-Stops the remote desktop connection by killing the `wfreerdp.exe` process associated with the session.
-
-### Settings
-Shows a window with all the settings from the `FreeRdpConfiguration` class. Edit/change the settings before you click on `Connect`.
-
-## Notable Features
-
-### Auto Expand Desktop Size
-If `DesktopWidth` and `DesktopHeight` properties are set to `0` (default), the remote desktop size is determined by the container size the control is placed on.
-
-### Smart Reconnect
-If `SmartReconnect` is set to `true` and the container size has changed, the connection will automatically be closed and re-opened to adapt to the new desktop size.
-
-## Acknowledgements
-Special thanks to [Marc-André Moreau](https://github.com/awakecoding) and [akallabeth](https://github.com/akallabeth) for all the help
+Special thanks to [Marc-André Moreau](https://github.com/awakecoding) and [akallabeth](https://github.com/akallabeth) for their help.

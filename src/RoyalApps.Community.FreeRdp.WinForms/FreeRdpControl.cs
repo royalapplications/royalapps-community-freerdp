@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.ComponentModel;
+using System.Collections.Concurrent;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
@@ -32,6 +33,14 @@ public class FreeRdpControl : UserControl
     private readonly UserControl _renderTarget;
     private Size _previousClientSize = Size.Empty;
     private Process? _process;
+    private readonly ConcurrentDictionary<Process, FreeRdpProcessDiagnostics> _diagnosticCaptures = new();
+
+    /// <summary>Invoked before every client launch. Return null to leave native diagnostics unchanged.</summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public Func<FreeRdpDiagnosticsOptions?>? DiagnosticsOptionsProvider { get; set; }
+
+    /// <summary>Native diagnostic output. Handlers must be thread-safe and must not block.</summary>
+    public event EventHandler<FreeRdpDiagnosticEventArgs>? DiagnosticOutput;
     private long _processGeneration;
     private IntPtr _freeRdpWindowHandle = IntPtr.Zero;
     private int _disposeStarted;
@@ -249,7 +258,21 @@ public class FreeRdpControl : UserControl
             }
         };
 
-        Logger.LogTrace("Starting wfreerdp.exe {Arguments}", process.StartInfo.Arguments);
+        FreeRdpDiagnosticsOptions? diagnostics = null;
+        try
+        {
+            diagnostics = DiagnosticsOptionsProvider?.Invoke();
+            if (diagnostics is not null)
+                FreeRdpProcessDiagnostics.Configure(process.StartInfo, diagnostics);
+        }
+        catch
+        {
+            diagnostics = null;
+            process.StartInfo.RedirectStandardOutput = false;
+            process.StartInfo.RedirectStandardError = false;
+            Logger.LogWarning("Could not configure FreeRDP diagnostics; continuing without capture.");
+        }
+        Logger.LogTrace("Starting FreeRDP client {Executable}", Path.GetFileName(freeRdpPath));
 
         var processOwned = false;
         var connectSuperseded = false;
@@ -270,6 +293,9 @@ public class FreeRdpControl : UserControl
                     _process = process;
                     processOwned = true;
                     process.Start();
+                    if (diagnostics is not null)
+                        _diagnosticCaptures[process] = new FreeRdpProcessDiagnostics(process,
+                            args => DiagnosticOutput?.Invoke(this, args));
                     ProcessJobTracker.AddProcess(process);
                 }
             }
@@ -402,7 +428,7 @@ public class FreeRdpControl : UserControl
 
         var exitCode = process.ExitCode;
         process.Exited -= Process_Exited;
-        process.Dispose();
+        ReleaseProcess(process);
 
         if (!CanRaiseLifecycleEvent)
             return;
@@ -568,10 +594,18 @@ public class FreeRdpControl : UserControl
         }
         finally
         {
-            process.Dispose();
+            ReleaseProcess(process);
         }
 
         return true;
+    }
+
+    private void ReleaseProcess(Process process)
+    {
+        if (_diagnosticCaptures.TryRemove(process, out var diagnostics))
+            diagnostics.Release(process);
+        else
+            process.Dispose();
     }
 
     private void OnConnected(long processGeneration)
