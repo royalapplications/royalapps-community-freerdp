@@ -39,7 +39,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: 26
           cache: npm
       - name: Install dependencies
         run: npm ci
@@ -51,7 +51,7 @@ jobs:
         run: npm run docs:build
       - name: Upload Pages artifact
         if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: docs/.vitepress/dist
 
@@ -68,4 +68,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
