@@ -29,7 +29,7 @@ const publicApi = collectPublicApiSurface(path.join(repoRoot, "src", "RoyalApps.
 
 execFileSync(
   "dotnet",
-  ["build", projectFile, "-c", "Release", "-nologo", "-p:UseSharedCompilation=false",
+  ["build", projectFile, "-c", "Release", "-f", "net10.0-windows", "-nologo", "-p:UseSharedCompilation=false",
     "-p:Platform=AnyCPU", "-p:RuntimeIdentifier=", "-p:EnableWindowsTargeting=true",
     "-p:RestoreConfigFile=" + path.join(__dirname, "NuGet.Config")],
   { cwd: repoRoot, stdio: "inherit" });

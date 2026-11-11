@@ -2,7 +2,7 @@
 
 ## Requirements
 
-Use a Windows WinForms application targeting `net10.0-windows` and the .NET 10 SDK. See the [Support Matrix](/articles/support-matrix) for native-client and architecture considerations.
+Use a Windows WinForms application targeting `net10.0-windows` or `net11.0-windows`. Building this repository requires the .NET 11 SDK. See the [Support Matrix](/articles/support-matrix) for native-client and architecture considerations.
 
 ## Install
 

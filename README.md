@@ -2,7 +2,7 @@
 
 [![NuGet Version](https://img.shields.io/nuget/v/RoyalApps.Community.FreeRdp.WinForms.svg?style=flat)](https://www.nuget.org/packages/RoyalApps.Community.FreeRdp.WinForms)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/RoyalApps.Community.FreeRdp.WinForms.svg?color=green)](https://www.nuget.org/packages/RoyalApps.Community.FreeRdp.WinForms)
-[![.NET](https://img.shields.io/badge/.NET-net10.0--windows-blueviolet)](https://dotnet.microsoft.com/download)
+[![.NET](https://img.shields.io/badge/.NET-10%20%7C%2011-blueviolet)](https://dotnet.microsoft.com/download)
 
 `RoyalApps.Community.FreeRdp.WinForms` embeds [FreeRDP's Windows client](https://github.com/FreeRDP/FreeRDP) in a WinForms application. It launches `wfreerdp.exe` with a parent-window handle; it does not use Microsoft RDP ActiveX or FreeRdpKit.
 
@@ -11,7 +11,7 @@
 - Connection events, credential/certificate retries, and resize/zoom reconnects.
 - Opt-in native diagnostics with per-launch configuration and stdout/stderr capture, introduced in **2.2.4**.
 
-The current source targets **.NET 10 on Windows**. Older package releases may have different framework requirements.
+The current source targets **.NET 10 and .NET 11 on Windows**. Older package releases may have different framework requirements.
 
 ## Documentation
 
@@ -75,6 +75,26 @@ dotnet test src/RoyalApps.Community.FreeRdp.WinForms.Tests/RoyalApps.Community.F
 npm ci
 npm run docs:dev
 ```
+
+## Package publishing
+
+The package workflow builds and tests both frameworks on pull requests and pushes to `main`. Only pushes to `main` publish to NuGet.org, using `NuGet/login` and a short-lived OIDC credential.
+
+Sign in to NuGet.org as `StefanKoell` and create a [trusted publishing policy](https://www.nuget.org/account/trustedpublishing) with these settings:
+
+| Field | Value |
+| --- | --- |
+| Policy name | Royal Apps Community FreeRDP |
+| Package owner | RoyalApps |
+| CI/CD provider | GitHub Actions |
+| Repository owner | royalapplications |
+| Repository | royalapps-community-freerdp |
+| Workflow file | publish.yml |
+| Environment | Leave empty |
+| Scope | Push new packages and package versions |
+| Glob patterns and packages | RoyalApps.Community.FreeRdp.* |
+
+The workflow uses the organization Actions variable `NUGET_USER=StefanKoell`, which is already available to this repository. Create the policy before pushing the release changes to `main`. After the first successful publication, remove the old `NUGET_API_KEY` secret if no other workflow uses it. See the [NuGet trusted publishing guide](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing) for details.
 
 ## License and acknowledgements
 

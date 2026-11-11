@@ -2,7 +2,7 @@
 
 ## Local development
 
-From the repository root, use Node.js 22.18 or newer (CI uses Node.js 24) and the .NET 10 SDK. The API generator builds the Windows-targeted library with cross-targeting enabled; it does not launch a native RDP client.
+From the repository root, use Node.js 22.18 or newer (CI uses Node.js 26) and the .NET 11 SDK. The API generator builds the Windows-targeted library with cross-targeting enabled; it does not launch a native RDP client.
 
 ```sh
 npm ci
@@ -51,7 +51,7 @@ Keep text files UTF-8 with BOM and CRLF, following the repository convention.
 
 ## Validation and deployment
 
-The docs workflow builds on pull requests and pushes to `main` when documentation, source, generator, or dependency files change. It installs .NET 10 as well as Node.js, then regenerates and tests the reference before building the site. Deployment is **manual**: after reviewing and merging changes, run **FreeRDP Docs** from GitHub Actions.
+The docs workflow builds on pull requests and pushes to `main` when documentation, source, generator, or dependency files change. It installs .NET 11 as well as Node.js, then regenerates and tests the reference before building the site. Deployment is **manual**: after reviewing and merging changes, run **FreeRDP Docs** from GitHub Actions.
 
 Before the first deployment, select **GitHub Actions** as the repository's **Settings → Pages → Build and deployment → Source**. The workflow uploads a Pages artifact and deploys it without creating or force-pushing a `gh-pages` branch.
 

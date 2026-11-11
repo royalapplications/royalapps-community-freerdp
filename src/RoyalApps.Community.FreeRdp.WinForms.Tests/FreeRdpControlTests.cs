@@ -185,6 +185,16 @@ public class FreeRdpControlTests
         });
     }
 
+    [TestCase(96, 100)]
+    [TestCase(120, 125)]
+    [TestCase(144, 150)]
+    [TestCase(168, 175)]
+    [TestCase(192, 200)]
+    public void DpiScalingPreservesFractionalDpi(int dpi, int expectedScale)
+    {
+        Assert.That(FreeRdpControl.CalculateDpiScalingInPercent(dpi), Is.EqualTo(expectedScale));
+    }
+
     private sealed class TestFreeRdpControl : FreeRdpControl
     {
         public void EnsureHandleCreated() => _ = Handle;

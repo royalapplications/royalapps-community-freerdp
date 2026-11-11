@@ -4,7 +4,7 @@ These docs describe the current repository source, not every historical NuGet re
 
 | Area | Current scope |
 | --- | --- |
-| Managed framework | `net10.0-windows`; .NET 10 SDK for building. |
+| Managed framework | `net10.0-windows` and `net11.0-windows`; .NET 11 SDK for building. |
 | UI | Windows Forms. |
 | Backend | An out-of-process Windows `wfreerdp.exe` embedded using its parent-window handle. |
 | Native client | Bundled executable, or a compatible custom executable selected by the host. |

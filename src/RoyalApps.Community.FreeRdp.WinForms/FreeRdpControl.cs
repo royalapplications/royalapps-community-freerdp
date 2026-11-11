@@ -549,7 +549,9 @@ public class FreeRdpControl : UserControl
     }
 
     private double GetDpiScalingFactor() => DeviceDpi / 96.0;
-    private int GetDpiScalingInPercent() => (int) GetDpiScalingFactor() * 100;
+    private int GetDpiScalingInPercent() => CalculateDpiScalingInPercent(DeviceDpi);
+
+    internal static int CalculateDpiScalingInPercent(int dpi) => (int) (dpi / 96.0 * 100);
 
     private bool StopProcess(Process? expectedProcess = null, long? expectedGeneration = null)
     {

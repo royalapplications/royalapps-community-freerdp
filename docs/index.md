@@ -34,7 +34,7 @@ features:
 
 The bundled client is extracted before launch. You can also select a compatible `wfreerdp.exe` yourself. Each launched client runs in its own process.
 
-These docs describe the current source targeting **.NET 10 on Windows**. The diagnostics APIs are introduced in **2.2.4**; confirm availability in your installed package.
+These docs describe the current source targeting **.NET 10 and .NET 11 on Windows**. The diagnostics APIs are introduced in **2.2.4**; confirm availability in your installed package.
 
 ![FreeRDP demo application](/assets/Screenshot.png)
 
